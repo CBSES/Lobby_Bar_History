@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Lobby Bar — 16 Year History</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  /* ===== Theme system ===== */
+  :root, [data-theme="dark"] {
+    --bg: #0c0e12;
+    --bg-2: #14171d;
+    --bg-3: #1c2029;
+    --line: #2a2f3a;
+    --line-2: #353b48;
+    --ink: #e8eaed;
+    --ink-2: #a8acb5;
+    --ink-3: #6b7180;
+    --gold: #f5d547;
+    --silver: #b1b6c2;
+    --bronze: #cd7f32;
+    --hot: #ff4e64;
+    --cold: #5fa8ff;
+    --green: #6ed47a;
+    --canvas-text: #e8eaed;
+    --grid-line: #2a2f3a;
+  }
+  [data-theme="midnight"] {
+    --bg: #0a1628;
+    --bg-2: #122236;
+    --bg-3: #1a3050;
+    --line: #1f3858;
+    --line-2: #2a4870;
+    --ink: #e8f0ff;
+    --ink-2: #a0b8d4;
+    --ink-3: #6890b8;
+    --gold: #ffd54f;
+    --silver: #c0d0e8;
+    --bronze: #e09a4a;
+    --hot: #ff6080;
+    --cold: #4fc3f7;
+    --green: #66dd99;
+    --canvas-text: #e8f0ff;
+    --grid-line: #1f3858;
+  }
+  [data-theme="paper"] {
+    --bg: #f4f1ea;
+    --bg-2: #ffffff;
+    --bg-3: #ebe6db;
+    --line: #d8d2c4;
+    --line-2: #c4bca8;
+    --ink: #2a2620;
+    --ink-2: #5a5448;
+    --ink-3: #8a8270;
+    --gold: #c89a2c;
+    --silver: #8a8a8a;
+    --bronze: #b8722c;
+    --hot: #d63b58;
+    --cold: #2c8acb;
+    --green: #4aa860;
+    --canvas-text: #2a2620;
+    --grid-line: #d8d2c4;
+  }
+  [data-theme="forest"] {
+    --bg: #0f1814;
+    --bg-2: #182320;
+    --bg-3: #213029;
+    --line: #2a3d33;
+    --line-2: #3a5045;
+    --ink: #ecf0eb;
+    --ink-2: #aab8b0;
+    --ink-3: #6f8278;
+    --gold: #e8c547;
+    --silver: #c0c8c0;
+    --bronze: #cd8a3a;
+    --hot: #f06978;
+    --cold: #6ab8d6;
+    --green: #7dd494;
+    --canvas-text: #ecf0eb;
+    --grid-line: #2a3d33;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink);
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    font-feature-settings: 'tnum', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .3s ease, color .3s ease;
+  }
+  body { min-height: 100vh; padding: 20px 28px 60px; }
+
+  /* ===== Masthead ===== */
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: end;
+    gap: 24px;
+  }
+  .brand-mark {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 6px;
+  }
+  .brand-mark .dot {
+    width: 11px; height: 11px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 18px var(--gold);
+  }
+  .brand-mark .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 78px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+  }
+  h1 .accent { color: var(--gold); font-style: italic; }
+  .sub {
+    font-size: 14px;
+    color: var(--ink-2);
+    margin-top: 8px;
+    max-width: 700px;
+    line-height: 1.55;
+  }
+  .header-stats {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+  }
+  .hstat .v {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .hstat .l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ===== Logo box (now hosts a video) ===== */
+  .logo-box {
+    width: 130px;
+    height: 130px;
+    border: 2px solid var(--gold);
+    background: var(--bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(245, 213, 71, 0.15);
+  }
+
+  /* ===== Theme picker ===== */
+  .theme-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .theme-bar .tlbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-right: 10px;
+  }
+  .theme-swatch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-3);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--ink-2);
+    transition: all .2s;
+  }
+  .theme-swatch:hover { color: var(--ink); border-color: var(--gold); }
+  .theme-swatch.active { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+  .theme-swatch .preview {
+    width: 14px; height: 14px;
+    border: 1px solid currentColor;
+  }
+
+  /* ===== Tabs ===== */
+  .tabs {
+    display: flex;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    gap: 0;
+  }
+  .tab {
+    background: transparent;
+    border: 0;
+    padding: 14px 20px;
+    color: var(--ink-3);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .tab:hover { color: var(--ink-2); }
+  .tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn .3s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ===== Panels ===== */
+  .grid { display: grid; gap: 22px; margin-bottom: 22px; }
+  .grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .panel {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 20px 22px;
+  }
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .panel-head h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+  }
+  .panel-head .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .panel-sub {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .chart-wrap { position: relative; height: 380px; }
+  .chart-wrap.tall { height: 540px; }
+
+  /* ===== Chart type toggle ===== */
+  .chart-toggle {
+    display: inline-flex;
+    gap: 0;
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    padding: 2px;
+  }
+  .chart-toggle button {
+    background: transparent;
+    color: var(--ink-2);
+    border: 0;
+    padding: 5px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .chart-toggle button:hover { color: var(--ink); }
+  .chart-toggle button.active {
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  /* ===== Standings table ===== */
+  table.standings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.standings thead th {
+    background: var(--bg-3);
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  table.standings thead th:hover { color: var(--ink); }
+  table.standings thead th.r { text-align: right; }
+  table.standings tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  table.standings tbody td.r { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  table.standings tbody tr:hover td { background: var(--bg-3); }
+  table.standings tbody tr.row-1 td:first-child { border-left: 3px solid var(--gold); }
+  table.standings tbody tr.row-2 td:first-child { border-left: 3px solid var(--silver); }
+  table.standings tbody tr.row-3 td:first-child { border-left: 3px solid var(--bronze); }
+  .owner-name { font-weight: 600; font-size: 13.5px; }
+  .owner-name .last-team {
+    display: block;
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 2px;
+  }
+  .chips {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* ===== Owner cards ===== */
+  .owner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .owner-card {
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    padding: 16px;
+    transition: all .2s;
+  }
+  .owner-card:hover { border-color: var(--gold); }
+  .owner-card .rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+  .owner-card .name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .owner-card .last-team {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .owner-card .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+  }
+  .owner-card .stat-row .lbl {
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .owner-card .stat-row .val { font-weight: 600; }
+  .owner-card .trophy-row {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .trophy {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 2px;
+    background: var(--bg-2);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    letter-spacing: 0.06em;
+  }
+  .trophy.silver { color: var(--silver); border-color: var(--silver); }
+  .trophy.bronze { color: var(--bronze); border-color: var(--bronze); }
+  .trophy.toilet { color: var(--hot); border-color: var(--hot); }
+
+  /* ===== Heatmap ===== */
+  .heatmap-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    background: var(--bg);
+  }
+  table.heatmap {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    font-size: 11.5px;
+  }
+  table.heatmap th, table.heatmap td {
+    padding: 10px 6px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    border: 1px solid var(--line);
+    min-width: 56px;
+  }
+  table.heatmap thead th {
+    background: var(--bg-3);
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  table.heatmap tbody th {
+    background: var(--bg-3);
+    color: var(--ink);
+    text-align: left;
+    font-weight: 600;
+    font-size: 12.5px;
+    padding-left: 14px;
+    padding-right: 14px;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 160px;
+  }
+  table.heatmap tbody td {
+    color: #000;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: default;
+    transition: transform .15s;
+  }
+  table.heatmap tbody td:hover { transform: scale(1.06); position: relative; z-index: 5; box-shadow: 0 0 0 2px var(--gold); }
+  table.heatmap tbody td.empty { background: var(--bg-2); color: var(--ink-3); }
+  /* Win % heatmap colors use different scheme */
+
+  .heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .heatmap-legend .swatch {
+    width: 18px; height: 18px;
+    border: 1px solid var(--line);
+  }
+
+  /* ===== Records list ===== */
+  .records-list { display: grid; gap: 8px; }
+  .record-row {
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-3);
+    font-size: 12.5px;
+  }
+  .record-row .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--ink-3);
+  }
+  .record-row .desc { line-height: 1.4; }
+  .record-row .desc strong { color: var(--gold); font-weight: 600; }
+  .record-row .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .record-row .val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .record-row .val.hot { color: var(--hot); }
+  .record-row .val.cold { color: var(--cold); }
+
+  /* ===== H2H Matrix ===== */
+  .h2h-matrix-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    background: var(--bg);
+  }
+  table.h2h {
+    border-collapse: collapse;
+    font-size: 11.5px;
+    width: 100%;
+  }
+  table.h2h th, table.h2h td {
+    padding: 7px 8px;
+    text-align: center;
+    border: 1px solid var(--line);
+    min-width: 75px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.h2h th {
+    background: var(--bg-3);
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  table.h2h th.row-name {
+    text-align: left;
+    background: var(--bg-3);
+    color: var(--ink);
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 130px;
+  }
+  table.h2h td.diag { background: var(--bg-2); color: var(--ink-3); }
+  table.h2h td.win { background: rgba(110, 212, 122, 0.18); }
+  table.h2h td.loss { background: rgba(255, 78, 100, 0.15); }
+  table.h2h td.even { background: var(--bg-3); }
+  table.h2h td .rec { font-weight: 700; font-size: 12px; color: var(--ink); }
+  table.h2h td .pct { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--ink-3); margin-top: 2px; }
+
+  /* ===== Footer ===== */
+  footer {
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 1100px) {
+    .grid.cols-2 { grid-template-columns: 1fr; }
+    .masthead { grid-template-columns: 1fr auto; }
+    .masthead .header-stats { grid-column: 1 / -1; }
+  }
+  @media (max-width: 600px) {
+    body { padding: 16px 14px 40px; }
+    .masthead { grid-template-columns: 1fr; }
+    .header-stats { gap: 12px; flex-wrap: wrap; }
+    .hstat .v { font-size: 24px; }
+    .panel { padding: 16px; }
+    .logo-box { width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div>
+    <div class="brand-mark">
+      <span class="dot"></span>
+      <span class="label">The Lobby Bar — 16 Years of Bloodshed</span>
+    </div>
+    <h1>League <span class="accent">History.</span></h1>
+    <p class="sub">2010–2025. Sixteen seasons. Same ten faces (mostly). Every championship, every meltdown, every lucky break — preserved here for posterity.</p>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="v" id="hs-seasons">—</div><div class="l">Seasons</div></div>
+    <div class="hstat"><div class="v" id="hs-matchups">—</div><div class="l">Matchups</div></div>
+    <div class="hstat"><div class="v" id="hs-owners">—</div><div class="l">Owners</div></div>
+  </div>
+  <!--
+    LOGO:
+    Currently embedding the yarn.co video as a looping muted clip.
+    If you want to swap it later, replace the <video> below with:
+      <img src="your-image.gif" style="width:100%;height:100%;object-fit:cover;" />
+    Or use a local file if you upload one to your repo.
+  -->
+  <div class="logo-box" title="Lobby Bar">
+    <video autoplay loop muted playsinline
+           src="https://i.makeagif.com/media/4-15-2015/8BXuXo.mp4"
+           style="width:100%; height:100%; object-fit:cover;">
+    </video>
+  </div>
+</header>
+
+<!-- Theme picker -->
+<div class="theme-bar">
+  <span class="tlbl">Theme</span>
+  <button class="theme-swatch active" data-theme="dark"><span class="preview" style="background:#0c0e12;"></span> Midnight Black</button>
+  <button class="theme-swatch" data-theme="midnight"><span class="preview" style="background:#0a1628;"></span> Deep Sea</button>
+  <button class="theme-swatch" data-theme="forest"><span class="preview" style="background:#0f1814;"></span> Forest</button>
+  <button class="theme-swatch" data-theme="paper"><span class="preview" style="background:#f4f1ea;"></span> Paper</button>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="standings">All-Time Standings</button>
+  <button class="tab" data-tab="trends">Career Heatmaps</button>
+  <button class="tab" data-tab="records">Records Book</button>
+  <button class="tab" data-tab="h2h">Head to Head</button>
+  <button class="tab" data-tab="luck">Luck & Drafts</button>
+</nav>
+
+<!-- ============ STANDINGS ============ -->
+<div class="tab-panel active" data-panel="standings">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>All-Time Career Standings</h2>
+      <span class="tag">2010–2025 · ALL OWNERS</span>
+    </div>
+    <p class="panel-sub">Sorted by championships first, then win percentage. Click any column header to re-sort.</p>
+    <table class="standings" id="careerTable">
+      <thead>
+        <tr>
+          <th data-sort="rank">#</th>
+          <th data-sort="owner">Owner</th>
+          <th class="r" data-sort="seasons_played">Yrs</th>
+          <th class="r" data-sort="record">Record</th>
+          <th class="r" data-sort="win_pct">Win %</th>
+          <th class="r" data-sort="championships">Chips</th>
+          <th class="r" data-sort="playoff_pct">Playoff %</th>
+          <th class="r" data-sort="ppg">PF/G</th>
+          <th class="r" data-sort="papg">PA/G</th>
+          <th class="r" data-sort="diff">Diff</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="panel" style="margin-top: 22px;">
+    <div class="panel-head">
+      <h2>Owner Trophy Cases</h2>
+      <span class="tag">CHAMPIONSHIPS · RUNNER-UPS · TOILET BOWLS</span>
+    </div>
+    <p class="panel-sub">Each owner's complete hardware. Gold = champion, silver = runner-up, bronze = third place, red = last place finishes.</p>
+    <div class="owner-grid" id="ownerGrid"></div>
+  </div>
+</div>
+
+<!-- ============ TRENDS (now heatmaps) ============ -->
+<div class="tab-panel" data-panel="trends">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Final Standings — All 16 Years</h2>
+      <span class="tag">HEATMAP · DARKER GREEN = BETTER FINISH</span>
+    </div>
+    <p class="panel-sub">Each row is one owner's career. Each cell is their final standing that year. Read across to see the arc — long stretches of green mean a dynasty; bands of red mean wandering in the wilderness. Hover any cell for details.</p>
+    <div class="heatmap-wrap">
+      <table class="heatmap" id="standingsHeatmap"></table>
+    </div>
+    <div class="heatmap-legend">
+      <span>Finish:</span>
+      <span class="swatch" style="background:#1a8c3c;"></span> 1st
+      <span class="swatch" style="background:#4ab361;"></span> 2nd–3rd
+      <span class="swatch" style="background:#9bc472;"></span> 4th–5th
+      <span class="swatch" style="background:#dac98a;"></span> 6th
+      <span class="swatch" style="background:#e89a64;"></span> 7th–8th
+      <span class="swatch" style="background:#c45a4a;"></span> 9th
+      <span class="swatch" style="background:#8a2424;"></span> 10th
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top: 22px;">
+    <div class="panel-head">
+      <h2>Win Percentage — All 16 Years</h2>
+      <span class="tag">HEATMAP · DARKER BLUE = BETTER WIN%</span>
+    </div>
+    <p class="panel-sub">Same idea, different metric. Each cell shows the regular-season win percentage. Easier to spot dominant stretches and prolonged droughts than tracking ten lines on a chart.</p>
+    <div class="heatmap-wrap">
+      <table class="heatmap" id="winpctHeatmap"></table>
+    </div>
+  </div>
+
+  <div class="grid cols-2" style="margin-top: 22px;">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Career Points Per Game</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <span class="tag">SCORING POWER · ALL TIME</span>
+          <div class="chart-toggle" data-target="ppg">
+            <button class="active" data-type="bar">BAR</button>
+            <button data-type="line">LINE</button>
+          </div>
+        </div>
+      </div>
+      <p class="panel-sub">The teams that consistently put up points. Toggle BAR / LINE to switch chart style.</p>
+      <div class="chart-wrap"><canvas id="chartPPG"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Career Win Percentage</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <span class="tag">CAREER · ALL TIME</span>
+          <div class="chart-toggle" data-target="winpct">
+            <button class="active" data-type="bar">BAR</button>
+            <button data-type="line">LINE</button>
+          </div>
+        </div>
+      </div>
+      <p class="panel-sub">Career regular-season win % across all 16 years.</p>
+      <div class="chart-wrap"><canvas id="chartWinPctRanked"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RECORDS ============ -->
+<div class="tab-panel" data-panel="records">
+  <div style="background: var(--bg-3); border: 1px solid var(--gold); padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px; color: var(--ink-2); line-height: 1.5;">
+    <strong style="color: var(--gold);">Note on data:</strong> All single-week records exclude playoff weeks. The Lobby Bar uses 2-week head-to-head playoff matchups, which ESPN reports as duplicated single-week scores (each playoff matchup appears in both weeks of the round). Filtering to regular-season-only gives you actual single-week scoring records.
+  </div>
+  <div class="grid cols-2">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Highest Single-Week Scores</h2>
+        <span class="tag">REG SEASON ONLY</span>
+      </div>
+      <div class="records-list" id="highScoresList"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Lowest Single-Week Scores</h2>
+        <span class="tag">REG SEASON · WALL OF SHAME</span>
+      </div>
+      <div class="records-list" id="lowScoresList"></div>
+    </div>
+  </div>
+
+  <div class="grid cols-2" style="margin-top: 22px;">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Biggest Blowouts</h2>
+        <span class="tag">REG SEASON · MARGIN OF VICTORY</span>
+      </div>
+      <div class="records-list" id="blowoutsList"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Closest Games</h2>
+        <span class="tag">REG SEASON · NAIL BITERS</span>
+      </div>
+      <div class="records-list" id="closeGamesList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ H2H ============ -->
+<div class="tab-panel" data-panel="h2h">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Head-to-Head Records</h2>
+      <span class="tag">ROW vs COLUMN · 2019+</span>
+    </div>
+    <p class="panel-sub">Read across each row to see how that owner has fared against everyone else. Green = winning record, red = losing. Hover for full record + average score margin.</p>
+    <div class="h2h-matrix-wrap">
+      <table class="h2h" id="h2hTable"></table>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top: 22px;">
+    <div class="panel-head">
+      <h2>Biggest Rivalries</h2>
+      <span class="tag">MOST GAMES · CLOSEST RECORDS</span>
+    </div>
+    <p class="panel-sub">The matchups that matter most — high game volume + tight overall record.</p>
+    <div class="records-list" id="rivalriesList"></div>
+  </div>
+</div>
+
+<!-- ============ LUCK & DRAFT ============ -->
+<div class="tab-panel" data-panel="luck">
+  <div class="grid cols-2">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Luck Rankings</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <span class="tag">ACTUAL – EXPECTED WINS</span>
+          <div class="chart-toggle" data-target="luck">
+            <button class="active" data-type="bar">BAR</button>
+            <button data-type="line">LINE</button>
+          </div>
+        </div>
+      </div>
+      <p class="panel-sub">Each week, your "expected wins" is your weekly score percentile. The difference between actual W's and expected is your luck score. Positive = lucky, negative = robbed. Reg season only.</p>
+      <div class="chart-wrap"><canvas id="chartLuck"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Draft Hit Rate</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <span class="tag">PTS / SEASON</span>
+          <div class="chart-toggle" data-target="draft">
+            <button class="active" data-type="bar">BAR</button>
+            <button data-type="line">LINE</button>
+          </div>
+        </div>
+      </div>
+      <p class="panel-sub">Average fantasy production from drafted starters per season — pure measure of draft skill.</p>
+      <div class="chart-wrap"><canvas id="chartDraft"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top: 22px;">
+    <div class="panel-head">
+      <h2>The Luck × Draft Quadrant</h2>
+      <span class="tag">SKILLED VS FORTUNATE</span>
+    </div>
+    <p class="panel-sub">
+      Where each owner sits on the spectrum.
+      <strong style="color: var(--gold);">Top-right</strong> = good drafter who also gets lucky (Eric, Matt, Thomas-ish).
+      <strong style="color: var(--cold);">Top-left</strong> = bad drafter who keeps winning anyway (Greg).
+      <strong style="color: var(--ink-2);">Bottom-right</strong> = good drafter who gets robbed.
+      <strong style="color: var(--hot);">Bottom-left</strong> = bad drafter AND unlucky (Sean Henry, the cursed).
+    </p>
+    <div class="chart-wrap tall"><canvas id="chartQuadrant"></canvas></div>
+  </div>
+</div>
+
+<footer>
+  <span>Source: ESPN Fantasy API · 2010–2025 · 16 seasons</span>
+  <span>2019+ for matchup data · Playoffs filtered from records</span>
+</footer>
+
+<script>
+const DATA = {"league_name": "Lobby Bar", "year_range": [2010, 2025], "total_seasons": 16, "total_matchups": 524, "career": [{"owner": "Andrew Howard", "team_names": ["Arthur  Deshaunerserlli", "Chad  PUNington ", "Dez Dispenser", "Fuck You Neil", "Howard the Duck", "Jones' town Massacre ", "Justin Case ", "Malik Deez Nutz", "Micro Penis", "My Fourneteskin Really Ertz", "NEIL IS  A WEASEL", "Purdy Bird ", "Ridley  Me This", "Who's  Next?", "Yo Soy Gronkhitis"], "seasons_played": 16, "total_wins": 117, "total_losses": 81, "total_ties": 1, "total_games": 199, "win_pct": 0.5905, "total_pf": 22797.8, "total_pa": 21694.8, "ppg": 114.56, "papg": 109.02, "championships": [2010, 2011, 2013], "runner_ups": [2014, 2020, 2024], "third_place": [2017, 2018, 2019, 2021], "last_place": [], "playoff_appearances": [2010, 2011, 2012, 2013, 2014, 2017, 2018, 2019, 2020, 2021, 2023, 2024], "playoff_pct": 0.75, "best_season": {"year": 2019, "pf": 2000.5, "wins": 10, "losses": 3, "final": 3}, "worst_season": {"year": 2016, "pf": 1054.5, "wins": 6, "losses": 6, "final": 8}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1224.8, "final": 1}, {"year": 2011, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1318.9, "final": 1}, {"year": 2012, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1277.5, "final": 5}, {"year": 2013, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1415.5, "final": 1}, {"year": 2014, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1368.9, "final": 2}, {"year": 2015, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1192.0, "final": 9}, {"year": 2016, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1054.5, "final": 8}, {"year": 2017, "win_pct": 0.75, "wins": 9, "losses": 3, "pf": 1158.3, "final": 3}, {"year": 2018, "win_pct": 0.75, "wins": 9, "losses": 3, "pf": 1495.2, "final": 3}, {"year": 2019, "win_pct": 0.769, "wins": 10, "losses": 3, "pf": 2000.5, "final": 3}, {"year": 2020, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1626.8, "final": 2}, {"year": 2021, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1793.2, "final": 3}, {"year": 2022, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1354.5, "final": 8}, {"year": 2023, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1525.3, "final": 4}, {"year": 2024, "win_pct": 0.692, "wins": 9, "losses": 4, "pf": 1582.9, "final": 2}, {"year": 2025, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1409.0, "final": 7}], "season_history": [{"year": 2010, "team_id": 2, "team_name": "Howard the Duck", "wins": 8, "losses": 5, "ties": 0, "pf": 1224.8, "pa": 1247.9, "final_standing": 1, "regular_season_standing": 4}, {"year": 2011, "team_id": 2, "team_name": "Dez Dispenser", "wins": 7, "losses": 5, "ties": 0, "pf": 1318.9, "pa": 1191.5, "final_standing": 1, "regular_season_standing": 3}, {"year": 2012, "team_id": 2, "team_name": "Yo Soy Gronkhitis", "wins": 6, "losses": 6, "ties": 0, "pf": 1277.5, "pa": 1290.3, "final_standing": 5, "regular_season_standing": 5}, {"year": 2013, "team_id": 2, "team_name": "Ridley  Me This", "wins": 8, "losses": 4, "ties": 0, "pf": 1415.5, "pa": 1231.7, "final_standing": 1, "regular_season_standing": 2}, {"year": 2014, "team_id": 2, "team_name": "Fuck You Neil", "wins": 8, "losses": 4, "ties": 0, "pf": 1368.9, "pa": 1240.4, "final_standing": 2, "regular_season_standing": 1}, {"year": 2015, "team_id": 2, "team_name": "Chad  PUNington ", "wins": 5, "losses": 7, "ties": 0, "pf": 1192.0, "pa": 1300.8, "final_standing": 9, "regular_season_standing": 9}, {"year": 2016, "team_id": 2, "team_name": "Who's  Next?", "wins": 6, "losses": 6, "ties": 0, "pf": 1054.5, "pa": 1180.2, "final_standing": 8, "regular_season_standing": 5}, {"year": 2017, "team_id": 2, "team_name": "NEIL IS  A WEASEL", "wins": 9, "losses": 3, "ties": 0, "pf": 1158.3, "pa": 1077.4, "final_standing": 3, "regular_season_standing": 2}, {"year": 2018, "team_id": 2, "team_name": "My Fourneteskin Really Ertz", "wins": 9, "losses": 3, "ties": 0, "pf": 1495.2, "pa": 1323.9, "final_standing": 3, "regular_season_standing": 1}, {"year": 2019, "team_id": 2, "team_name": "Micro Penis", "wins": 10, "losses": 3, "ties": 0, "pf": 2000.5, "pa": 1729.8, "final_standing": 3, "regular_season_standing": 1}, {"year": 2020, "team_id": 2, "team_name": "Arthur  Deshaunerserlli", "wins": 8, "losses": 4, "ties": 0, "pf": 1626.8, "pa": 1588.5, "final_standing": 2, "regular_season_standing": 2}, {"year": 2021, "team_id": 2, "team_name": "Jones' town Massacre ", "wins": 7, "losses": 6, "ties": 0, "pf": 1793.2, "pa": 1693.9, "final_standing": 3, "regular_season_standing": 4}, {"year": 2022, "team_id": 2, "team_name": "Justin Case ", "wins": 4, "losses": 9, "ties": 0, "pf": 1354.5, "pa": 1487.2, "final_standing": 8, "regular_season_standing": 10}, {"year": 2023, "team_id": 2, "team_name": "Purdy Bird ", "wins": 7, "losses": 6, "ties": 0, "pf": 1525.3, "pa": 1393.8, "final_standing": 4, "regular_season_standing": 4}, {"year": 2024, "team_id": 2, "team_name": "Purdy Bird ", "wins": 9, "losses": 4, "ties": 0, "pf": 1582.9, "pa": 1381.7, "final_standing": 2, "regular_season_standing": 2}, {"year": 2025, "team_id": 2, "team_name": "Malik Deez Nutz", "wins": 6, "losses": 6, "ties": 1, "pf": 1409.0, "pa": 1335.8, "final_standing": 7, "regular_season_standing": 6}]}, {"owner": "Chad Brodeur", "team_names": ["Baiken and Mayo on Wheatley", "Barbara  Waffles ", "Definitly  NOT Greg", "Hernandez is a murderer", "Jack Bog Montana ", "Make Lobby Bar Great Again", "Manhattans n' Mushrooms ", "Nice Pun  Asshole!", "Orphanage Fire ", "The  Muff Maker", "The Ultimate  Team Name", "Tungsten Arm O'Doyle ", "Ugh Ugh Uuugggghhhhha! ", "Unequivocally  The Sweetest", "Woodhead Solder Knees and Toes", "You're Mankins  Me Angry"], "seasons_played": 16, "total_wins": 107, "total_losses": 92, "total_ties": 0, "total_games": 199, "win_pct": 0.5377, "total_pf": 22115.2, "total_pa": 22013.7, "ppg": 111.13, "papg": 110.62, "championships": [2016, 2017, 2019], "runner_ups": [2012, 2025], "third_place": [], "last_place": [2013, 2020, 2022], "playoff_appearances": [2010, 2011, 2012, 2016, 2017, 2018, 2019, 2025], "playoff_pct": 0.5, "best_season": {"year": 2019, "pf": 1669.4, "wins": 7, "losses": 6, "final": 1}, "worst_season": {"year": 2015, "pf": 1038.6, "wins": 6, "losses": 6, "final": 8}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1419.8, "final": 5}, {"year": 2011, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1337.4, "final": 5}, {"year": 2012, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1193.5, "final": 2}, {"year": 2013, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1149.4, "final": 10}, {"year": 2014, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1197.7, "final": 9}, {"year": 2015, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1038.6, "final": 8}, {"year": 2016, "win_pct": 0.833, "wins": 10, "losses": 2, "pf": 1339.8, "final": 1}, {"year": 2017, "win_pct": 0.917, "wins": 11, "losses": 1, "pf": 1430.9, "final": 1}, {"year": 2018, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1612.1, "final": 5}, {"year": 2019, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1669.4, "final": 1}, {"year": 2020, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1455.8, "final": 10}, {"year": 2021, "win_pct": 0.462, "wins": 6, "losses": 7, "pf": 1641.7, "final": 9}, {"year": 2022, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1359.4, "final": 10}, {"year": 2023, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1415.4, "final": 7}, {"year": 2024, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1330.4, "final": 7}, {"year": 2025, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1523.9, "final": 2}], "season_history": [{"year": 2010, "team_id": 8, "team_name": "Baiken and Mayo on Wheatley", "wins": 7, "losses": 6, "ties": 0, "pf": 1419.8, "pa": 1353.5, "final_standing": 5, "regular_season_standing": 5}, {"year": 2011, "team_id": 8, "team_name": "Woodhead Solder Knees and Toes", "wins": 6, "losses": 6, "ties": 0, "pf": 1337.4, "pa": 1352.7, "final_standing": 5, "regular_season_standing": 5}, {"year": 2012, "team_id": 8, "team_name": "You're Mankins  Me Angry", "wins": 8, "losses": 4, "ties": 0, "pf": 1193.5, "pa": 1073.3, "final_standing": 2, "regular_season_standing": 3}, {"year": 2013, "team_id": 8, "team_name": "Hernandez is a murderer", "wins": 5, "losses": 7, "ties": 0, "pf": 1149.4, "pa": 1314.7, "final_standing": 10, "regular_season_standing": 8}, {"year": 2014, "team_id": 8, "team_name": "Nice Pun  Asshole!", "wins": 4, "losses": 8, "ties": 0, "pf": 1197.7, "pa": 1378.5, "final_standing": 9, "regular_season_standing": 8}, {"year": 2015, "team_id": 8, "team_name": "Definitly  NOT Greg", "wins": 6, "losses": 6, "ties": 0, "pf": 1038.6, "pa": 1100.4, "final_standing": 8, "regular_season_standing": 6}, {"year": 2016, "team_id": 8, "team_name": "Make Lobby Bar Great Again", "wins": 10, "losses": 2, "ties": 0, "pf": 1339.8, "pa": 1015.5, "final_standing": 1, "regular_season_standing": 1}, {"year": 2017, "team_id": 8, "team_name": "Unequivocally  The Sweetest", "wins": 11, "losses": 1, "ties": 0, "pf": 1430.9, "pa": 1124.1, "final_standing": 1, "regular_season_standing": 1}, {"year": 2018, "team_id": 8, "team_name": "The Ultimate  Team Name", "wins": 7, "losses": 5, "ties": 0, "pf": 1612.1, "pa": 1544.0, "final_standing": 5, "regular_season_standing": 5}, {"year": 2019, "team_id": 8, "team_name": "The  Muff Maker", "wins": 7, "losses": 6, "ties": 0, "pf": 1669.4, "pa": 1657.2, "final_standing": 1, "regular_season_standing": 5}, {"year": 2020, "team_id": 8, "team_name": "Ugh Ugh Uuugggghhhhha! ", "wins": 4, "losses": 8, "ties": 0, "pf": 1455.8, "pa": 1570.3, "final_standing": 10, "regular_season_standing": 8}, {"year": 2021, "team_id": 8, "team_name": "Barbara  Waffles ", "wins": 6, "losses": 7, "ties": 0, "pf": 1641.7, "pa": 1670.0, "final_standing": 9, "regular_season_standing": 7}, {"year": 2022, "team_id": 8, "team_name": "Manhattans n' Mushrooms ", "wins": 4, "losses": 9, "ties": 0, "pf": 1359.4, "pa": 1601.6, "final_standing": 10, "regular_season_standing": 9}, {"year": 2023, "team_id": 8, "team_name": "Jack Bog Montana ", "wins": 7, "losses": 6, "ties": 0, "pf": 1415.4, "pa": 1424.9, "final_standing": 7, "regular_season_standing": 5}, {"year": 2024, "team_id": 8, "team_name": "Orphanage Fire ", "wins": 7, "losses": 6, "ties": 0, "pf": 1330.4, "pa": 1377.7, "final_standing": 7, "regular_season_standing": 5}, {"year": 2025, "team_id": 8, "team_name": "Tungsten Arm O'Doyle ", "wins": 8, "losses": 5, "ties": 0, "pf": 1523.9, "pa": 1455.3, "final_standing": 2, "regular_season_standing": 3}]}, {"owner": "Thomas Pluciennik", "team_names": ["Edgewood Flamingos", "Fluffy-Backed Tit-Babbler", "Golden Taint", "Hi-Ho Duke!", "Honey Nut Berrios", "Joe Mixotic", "Lovin Touchin Suisham", "My Team is  In-Vince-ible", "Polish National Football Team", "Polish Pierogi Power", "Q is For  Quintorris", "Sapphire Vessel", "Stop Calling Me Muscle Hamster", "Ted Wells, More Like Ted Smells", "Tommy Want Wingy", "Tommy: Luv and Thunder"], "seasons_played": 16, "total_wins": 115, "total_losses": 83, "total_ties": 1, "total_games": 199, "win_pct": 0.5804, "total_pf": 22737.9, "total_pa": 21470.3, "ppg": 114.26, "papg": 107.89, "championships": [2014, 2023], "runner_ups": [2013], "third_place": [2016, 2024], "last_place": [2011], "playoff_appearances": [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "playoff_pct": 0.812, "best_season": {"year": 2021, "pf": 1731.3, "wins": 8, "losses": 5, "final": 4}, "worst_season": {"year": 2011, "pf": 1113.9, "wins": 4, "losses": 8, "final": 10}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1277.6, "final": 7}, {"year": 2011, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1113.9, "final": 10}, {"year": 2012, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1120.9, "final": 9}, {"year": 2013, "win_pct": 0.833, "wins": 10, "losses": 2, "pf": 1315.2, "final": 2}, {"year": 2014, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1274.3, "final": 1}, {"year": 2015, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1271.8, "final": 4}, {"year": 2016, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1317.0, "final": 3}, {"year": 2017, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1168.3, "final": 5}, {"year": 2018, "win_pct": 0.625, "wins": 7, "losses": 4, "pf": 1697.7, "final": 4}, {"year": 2019, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1690.9, "final": 5}, {"year": 2020, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1524.0, "final": 4}, {"year": 2021, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1731.3, "final": 4}, {"year": 2022, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1442.8, "final": 5}, {"year": 2023, "win_pct": 0.692, "wins": 9, "losses": 4, "pf": 1606.2, "final": 1}, {"year": 2024, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1648.9, "final": 3}, {"year": 2025, "win_pct": 0.769, "wins": 10, "losses": 3, "pf": 1537.1, "final": 4}], "season_history": [{"year": 2010, "team_id": 4, "team_name": "Golden Taint", "wins": 7, "losses": 6, "ties": 0, "pf": 1277.6, "pa": 1183.8, "final_standing": 7, "regular_season_standing": 6}, {"year": 2011, "team_id": 4, "team_name": "Lovin Touchin Suisham", "wins": 4, "losses": 8, "ties": 0, "pf": 1113.9, "pa": 1244.2, "final_standing": 10, "regular_season_standing": 10}, {"year": 2012, "team_id": 4, "team_name": "My Team is  In-Vince-ible", "wins": 5, "losses": 7, "ties": 0, "pf": 1120.9, "pa": 1337.1, "final_standing": 9, "regular_season_standing": 7}, {"year": 2013, "team_id": 4, "team_name": "Stop Calling Me Muscle Hamster", "wins": 10, "losses": 2, "ties": 0, "pf": 1315.2, "pa": 1086.6, "final_standing": 2, "regular_season_standing": 1}, {"year": 2014, "team_id": 4, "team_name": "Polish Pierogi Power", "wins": 8, "losses": 4, "ties": 0, "pf": 1274.3, "pa": 1095.7, "final_standing": 1, "regular_season_standing": 3}, {"year": 2015, "team_id": 4, "team_name": "Ted Wells, More Like Ted Smells", "wins": 6, "losses": 6, "ties": 0, "pf": 1271.8, "pa": 1384.1, "final_standing": 4, "regular_season_standing": 4}, {"year": 2016, "team_id": 4, "team_name": "Polish National Football Team", "wins": 6, "losses": 6, "ties": 0, "pf": 1317.0, "pa": 1269.5, "final_standing": 3, "regular_season_standing": 4}, {"year": 2017, "team_id": 4, "team_name": "Q is For  Quintorris", "wins": 7, "losses": 5, "ties": 0, "pf": 1168.3, "pa": 1061.8, "final_standing": 5, "regular_season_standing": 5}, {"year": 2018, "team_id": 4, "team_name": "Honey Nut Berrios", "wins": 7, "losses": 4, "ties": 1, "pf": 1697.7, "pa": 1462.3, "final_standing": 4, "regular_season_standing": 2}, {"year": 2019, "team_id": 4, "team_name": "Hi-Ho Duke!", "wins": 8, "losses": 5, "ties": 0, "pf": 1690.9, "pa": 1578.5, "final_standing": 5, "regular_season_standing": 4}, {"year": 2020, "team_id": 4, "team_name": "Joe Mixotic", "wins": 8, "losses": 4, "ties": 0, "pf": 1524.0, "pa": 1468.6, "final_standing": 4, "regular_season_standing": 3}, {"year": 2021, "team_id": 4, "team_name": "Sapphire Vessel", "wins": 8, "losses": 5, "ties": 0, "pf": 1731.3, "pa": 1471.3, "final_standing": 4, "regular_season_standing": 2}, {"year": 2022, "team_id": 4, "team_name": "Tommy: Luv and Thunder", "wins": 4, "losses": 9, "ties": 0, "pf": 1442.8, "pa": 1561.9, "final_standing": 5, "regular_season_standing": 8}, {"year": 2023, "team_id": 4, "team_name": "Edgewood Flamingos", "wins": 9, "losses": 4, "ties": 0, "pf": 1606.2, "pa": 1343.8, "final_standing": 1, "regular_season_standing": 2}, {"year": 2024, "team_id": 4, "team_name": "Fluffy-Backed Tit-Babbler", "wins": 8, "losses": 5, "ties": 0, "pf": 1648.9, "pa": 1524.1, "final_standing": 3, "regular_season_standing": 3}, {"year": 2025, "team_id": 4, "team_name": "Tommy Want Wingy", "wins": 10, "losses": 3, "ties": 0, "pf": 1537.1, "pa": 1397.0, "final_standing": 4, "regular_season_standing": 1}]}, {"owner": "Greg Jalbert", "team_names": ["Chung Like a Horse ", "Clipboard Jesus", "Drafting Under The Influence", "Give 'em Sutton To Talk About", "Hasta Laviska Baby", "Jerking Goff Into Plants", "Jim's in Bob's Cooter", "Lacy Canadians ", "Riverboat Karaoke", "Sister Christian", "The Olsen Twins", "To Bill Croskey!", "Valar Morghulis", "Vereeneal Disease", "Zach Shartbonnet", "Zoltans of Swing"], "seasons_played": 16, "total_wins": 104, "total_losses": 95, "total_ties": 0, "total_games": 199, "win_pct": 0.5226, "total_pf": 22309.0, "total_pa": 21675.8, "ppg": 112.11, "papg": 108.92, "championships": [2015, 2024], "runner_ups": [2018], "third_place": [2010, 2011, 2020], "last_place": [2016], "playoff_appearances": [2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2020, 2021, 2023, 2024], "playoff_pct": 0.75, "best_season": {"year": 2018, "pf": 1727.5, "wins": 7, "losses": 5, "final": 2}, "worst_season": {"year": 2017, "pf": 1083.6, "wins": 5, "losses": 7, "final": 6}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1230.5, "final": 3}, {"year": 2011, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1348.6, "final": 3}, {"year": 2012, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1178.9, "final": 6}, {"year": 2013, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1347.7, "final": 5}, {"year": 2014, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1297.3, "final": 4}, {"year": 2015, "win_pct": 0.75, "wins": 9, "losses": 3, "pf": 1376.7, "final": 1}, {"year": 2016, "win_pct": 0.25, "wins": 3, "losses": 9, "pf": 1135.4, "final": 10}, {"year": 2017, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1083.6, "final": 6}, {"year": 2018, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1727.5, "final": 2}, {"year": 2019, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1424.5, "final": 9}, {"year": 2020, "win_pct": 0.75, "wins": 9, "losses": 3, "pf": 1632.0, "final": 3}, {"year": 2021, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1699.2, "final": 6}, {"year": 2022, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1367.9, "final": 7}, {"year": 2023, "win_pct": 0.462, "wins": 6, "losses": 7, "pf": 1463.9, "final": 5}, {"year": 2024, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1523.9, "final": 1}, {"year": 2025, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1471.4, "final": 9}], "season_history": [{"year": 2010, "team_id": 1, "team_name": "Chung Like a Horse ", "wins": 8, "losses": 5, "ties": 0, "pf": 1230.5, "pa": 1232.9, "final_standing": 3, "regular_season_standing": 3}, {"year": 2011, "team_id": 1, "team_name": "Vereeneal Disease", "wins": 8, "losses": 4, "ties": 0, "pf": 1348.6, "pa": 1127.0, "final_standing": 3, "regular_season_standing": 2}, {"year": 2012, "team_id": 1, "team_name": "Zoltans of Swing", "wins": 4, "losses": 8, "ties": 0, "pf": 1178.9, "pa": 1336.0, "final_standing": 6, "regular_season_standing": 8}, {"year": 2013, "team_id": 1, "team_name": "The Olsen Twins", "wins": 6, "losses": 6, "ties": 0, "pf": 1347.7, "pa": 1339.0, "final_standing": 5, "regular_season_standing": 5}, {"year": 2014, "team_id": 1, "team_name": "Valar Morghulis", "wins": 8, "losses": 4, "ties": 0, "pf": 1297.3, "pa": 1216.2, "final_standing": 4, "regular_season_standing": 2}, {"year": 2015, "team_id": 1, "team_name": "Lacy Canadians ", "wins": 9, "losses": 3, "ties": 0, "pf": 1376.7, "pa": 1169.3, "final_standing": 1, "regular_season_standing": 1}, {"year": 2016, "team_id": 1, "team_name": "Jim's in Bob's Cooter", "wins": 3, "losses": 9, "ties": 0, "pf": 1135.4, "pa": 1268.3, "final_standing": 10, "regular_season_standing": 10}, {"year": 2017, "team_id": 1, "team_name": "Clipboard Jesus", "wins": 5, "losses": 7, "ties": 0, "pf": 1083.6, "pa": 1076.6, "final_standing": 6, "regular_season_standing": 7}, {"year": 2018, "team_id": 1, "team_name": "Jerking Goff Into Plants", "wins": 7, "losses": 5, "ties": 0, "pf": 1727.5, "pa": 1587.9, "final_standing": 2, "regular_season_standing": 4}, {"year": 2019, "team_id": 1, "team_name": "Drafting Under The Influence", "wins": 5, "losses": 8, "ties": 0, "pf": 1424.5, "pa": 1493.7, "final_standing": 9, "regular_season_standing": 8}, {"year": 2020, "team_id": 1, "team_name": "Give 'em Sutton To Talk About", "wins": 9, "losses": 3, "ties": 0, "pf": 1632.0, "pa": 1441.8, "final_standing": 3, "regular_season_standing": 1}, {"year": 2021, "team_id": 1, "team_name": "Hasta Laviska Baby", "wins": 7, "losses": 6, "ties": 0, "pf": 1699.2, "pa": 1593.2, "final_standing": 6, "regular_season_standing": 5}, {"year": 2022, "team_id": 1, "team_name": "Sister Christian", "wins": 7, "losses": 6, "ties": 0, "pf": 1367.9, "pa": 1391.0, "final_standing": 7, "regular_season_standing": 6}, {"year": 2023, "team_id": 1, "team_name": "Zach Shartbonnet", "wins": 6, "losses": 7, "ties": 0, "pf": 1463.9, "pa": 1418.1, "final_standing": 5, "regular_season_standing": 6}, {"year": 2024, "team_id": 1, "team_name": "Riverboat Karaoke", "wins": 8, "losses": 5, "ties": 0, "pf": 1523.9, "pa": 1405.7, "final_standing": 1, "regular_season_standing": 4}, {"year": 2025, "team_id": 1, "team_name": "To Bill Croskey!", "wins": 4, "losses": 9, "ties": 0, "pf": 1471.4, "pa": 1579.1, "final_standing": 9, "regular_season_standing": 9}]}, {"owner": "Matt Howard", "team_names": [" # meNjoku", "Big Dick Bandits", "Bowe Shit, Bowe Shit, Bowe Shit", "Buttsweat and Tears", "Daddy Chark", "Hell in a Grahambasket", "I Won Last Year", "Kickers are players too", "Nelson Edelmandela", "OBJ TQIA+", "On to 2026", "Say His Name!", "TJ Jeudy"], "seasons_played": 16, "total_wins": 86, "total_losses": 112, "total_ties": 1, "total_games": 199, "win_pct": 0.4347, "total_pf": 20679.1, "total_pa": 22069.5, "ppg": 103.92, "papg": 110.9, "championships": [2012, 2022], "runner_ups": [2011, 2016], "third_place": [], "last_place": [2023, 2024, 2025], "playoff_appearances": [2011, 2012, 2015, 2016, 2021, 2022], "playoff_pct": 0.375, "best_season": {"year": 2021, "pf": 1564.7, "wins": 6, "losses": 7, "final": 5}, "worst_season": {"year": 2017, "pf": 924.4, "wins": 2, "losses": 10, "final": 8}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.231, "wins": 3, "losses": 10, "pf": 1194.0, "final": 9}, {"year": 2011, "win_pct": 0.542, "wins": 6, "losses": 5, "pf": 1174.1, "final": 2}, {"year": 2012, "win_pct": 0.75, "wins": 9, "losses": 3, "pf": 1323.4, "final": 1}, {"year": 2013, "win_pct": 0.167, "wins": 2, "losses": 10, "pf": 1025.4, "final": 8}, {"year": 2014, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1153.6, "final": 7}, {"year": 2015, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1237.7, "final": 6}, {"year": 2016, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1285.7, "final": 2}, {"year": 2017, "win_pct": 0.167, "wins": 2, "losses": 10, "pf": 924.4, "final": 8}, {"year": 2018, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1550.8, "final": 8}, {"year": 2019, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1516.8, "final": 7}, {"year": 2020, "win_pct": 0.25, "wins": 3, "losses": 9, "pf": 1361.9, "final": 7}, {"year": 2021, "win_pct": 0.462, "wins": 6, "losses": 7, "pf": 1564.7, "final": 5}, {"year": 2022, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1466.0, "final": 1}, {"year": 2023, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1292.4, "final": 10}, {"year": 2024, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1267.0, "final": 10}, {"year": 2025, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1341.2, "final": 10}], "season_history": [{"year": 2010, "team_id": 7, "team_name": "Buttsweat and Tears", "wins": 3, "losses": 10, "ties": 0, "pf": 1194.0, "pa": 1278.3, "final_standing": 9, "regular_season_standing": 10}, {"year": 2011, "team_id": 7, "team_name": "Bowe Shit, Bowe Shit, Bowe Shit", "wins": 6, "losses": 5, "ties": 1, "pf": 1174.1, "pa": 1207.0, "final_standing": 2, "regular_season_standing": 4}, {"year": 2012, "team_id": 7, "team_name": "Hell in a Grahambasket", "wins": 9, "losses": 3, "ties": 0, "pf": 1323.4, "pa": 1096.3, "final_standing": 1, "regular_season_standing": 1}, {"year": 2013, "team_id": 7, "team_name": "I Won Last Year", "wins": 2, "losses": 10, "ties": 0, "pf": 1025.4, "pa": 1248.3, "final_standing": 8, "regular_season_standing": 10}, {"year": 2014, "team_id": 7, "team_name": "Nelson Edelmandela", "wins": 7, "losses": 5, "ties": 0, "pf": 1153.6, "pa": 1208.2, "final_standing": 7, "regular_season_standing": 5}, {"year": 2015, "team_id": 7, "team_name": "Big Dick Bandits", "wins": 6, "losses": 6, "ties": 0, "pf": 1237.7, "pa": 1228.1, "final_standing": 6, "regular_season_standing": 5}, {"year": 2016, "team_id": 7, "team_name": "Big Dick Bandits", "wins": 8, "losses": 4, "ties": 0, "pf": 1285.7, "pa": 1270.1, "final_standing": 2, "regular_season_standing": 3}, {"year": 2017, "team_id": 7, "team_name": "Big Dick Bandits", "wins": 2, "losses": 10, "ties": 0, "pf": 924.4, "pa": 1131.9, "final_standing": 8, "regular_season_standing": 9}, {"year": 2018, "team_id": 7, "team_name": " # meNjoku", "wins": 7, "losses": 5, "ties": 0, "pf": 1550.8, "pa": 1613.9, "final_standing": 8, "regular_season_standing": 6}, {"year": 2019, "team_id": 7, "team_name": "OBJ TQIA+", "wins": 5, "losses": 8, "ties": 0, "pf": 1516.8, "pa": 1586.8, "final_standing": 7, "regular_season_standing": 7}, {"year": 2020, "team_id": 7, "team_name": "Daddy Chark", "wins": 3, "losses": 9, "ties": 0, "pf": 1361.9, "pa": 1715.5, "final_standing": 7, "regular_season_standing": 9}, {"year": 2021, "team_id": 7, "team_name": "TJ Jeudy", "wins": 6, "losses": 7, "ties": 0, "pf": 1564.7, "pa": 1674.3, "final_standing": 5, "regular_season_standing": 8}, {"year": 2022, "team_id": 7, "team_name": "Kickers are players too", "wins": 8, "losses": 5, "ties": 0, "pf": 1466.0, "pa": 1415.9, "final_standing": 1, "regular_season_standing": 3}, {"year": 2023, "team_id": 7, "team_name": "Kickers are players too", "wins": 5, "losses": 8, "ties": 0, "pf": 1292.4, "pa": 1443.4, "final_standing": 10, "regular_season_standing": 9}, {"year": 2024, "team_id": 7, "team_name": "Say His Name!", "wins": 4, "losses": 9, "ties": 0, "pf": 1267.0, "pa": 1465.4, "final_standing": 10, "regular_season_standing": 10}, {"year": 2025, "team_id": 7, "team_name": "On to 2026", "wins": 5, "losses": 8, "ties": 0, "pf": 1341.2, "pa": 1486.1, "final_standing": 10, "regular_season_standing": 8}]}, {"owner": "Eric Jalbert", "team_names": ["A team has no  name", "Alvin and the Thick Hunks", "Conner Into Bed", "Cream Pie", "Hall Pass", "If Brown Flush Down", "Kareem Pie", "Lamb Chop", "My Kupp Runneth Over", "Pee in the  Kupp Greg", "Seal Team 6", "Smelly Pitts", "Team 3", "Team 4", "TouchDowns  Syndrome", "Two Mannings,  One Cup"], "seasons_played": 16, "total_wins": 118, "total_losses": 80, "total_ties": 1, "total_games": 199, "win_pct": 0.5955, "total_pf": 22321.0, "total_pa": 21388.4, "ppg": 112.17, "papg": 107.48, "championships": [2018], "runner_ups": [2015, 2019, 2021, 2023], "third_place": [2013, 2022], "last_place": [2012, 2017], "playoff_appearances": [2010, 2013, 2014, 2015, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "playoff_pct": 0.812, "best_season": {"year": 2021, "pf": 1774.3, "wins": 11, "losses": 2, "final": 2}, "worst_season": {"year": 2011, "pf": 1092.6, "wins": 5, "losses": 7, "final": 8}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.769, "wins": 10, "losses": 3, "pf": 1339.4, "final": 4}, {"year": 2011, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1092.6, "final": 8}, {"year": 2012, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1094.5, "final": 10}, {"year": 2013, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1249.8, "final": 3}, {"year": 2014, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1094.6, "final": 6}, {"year": 2015, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1383.6, "final": 2}, {"year": 2016, "win_pct": 0.75, "wins": 9, "losses": 3, "pf": 1312.8, "final": 4}, {"year": 2017, "win_pct": 0.25, "wins": 3, "losses": 9, "pf": 1105.3, "final": 10}, {"year": 2018, "win_pct": 0.625, "wins": 7, "losses": 4, "pf": 1599.6, "final": 1}, {"year": 2019, "win_pct": 0.769, "wins": 10, "losses": 3, "pf": 1771.4, "final": 2}, {"year": 2020, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1533.5, "final": 5}, {"year": 2021, "win_pct": 0.846, "wins": 11, "losses": 2, "pf": 1774.3, "final": 2}, {"year": 2022, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1664.8, "final": 3}, {"year": 2023, "win_pct": 0.769, "wins": 10, "losses": 3, "pf": 1605.4, "final": 2}, {"year": 2024, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1356.1, "final": 5}, {"year": 2025, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1343.3, "final": 6}], "season_history": [{"year": 2010, "team_id": 5, "team_name": "Cream Pie", "wins": 10, "losses": 3, "ties": 0, "pf": 1339.4, "pa": 1262.5, "final_standing": 4, "regular_season_standing": 1}, {"year": 2011, "team_id": 5, "team_name": "Two Mannings,  One Cup", "wins": 5, "losses": 7, "ties": 0, "pf": 1092.6, "pa": 1166.2, "final_standing": 8, "regular_season_standing": 9}, {"year": 2012, "team_id": 5, "team_name": "TouchDowns  Syndrome", "wins": 4, "losses": 8, "ties": 0, "pf": 1094.5, "pa": 1205.8, "final_standing": 10, "regular_season_standing": 9}, {"year": 2013, "team_id": 5, "team_name": "Team 3", "wins": 8, "losses": 4, "ties": 0, "pf": 1249.8, "pa": 1130.1, "final_standing": 3, "regular_season_standing": 3}, {"year": 2014, "team_id": 5, "team_name": "Team 4", "wins": 6, "losses": 6, "ties": 0, "pf": 1094.6, "pa": 1191.4, "final_standing": 6, "regular_season_standing": 6}, {"year": 2015, "team_id": 5, "team_name": "Seal Team 6", "wins": 8, "losses": 4, "ties": 0, "pf": 1383.6, "pa": 1186.7, "final_standing": 2, "regular_season_standing": 2}, {"year": 2016, "team_id": 5, "team_name": "A team has no  name", "wins": 9, "losses": 3, "ties": 0, "pf": 1312.8, "pa": 1160.1, "final_standing": 4, "regular_season_standing": 2}, {"year": 2017, "team_id": 5, "team_name": "Kareem Pie", "wins": 3, "losses": 9, "ties": 0, "pf": 1105.3, "pa": 1280.2, "final_standing": 10, "regular_season_standing": 8}, {"year": 2018, "team_id": 5, "team_name": "Alvin and the Thick Hunks", "wins": 7, "losses": 4, "ties": 1, "pf": 1599.6, "pa": 1515.5, "final_standing": 1, "regular_season_standing": 3}, {"year": 2019, "team_id": 5, "team_name": "Pee in the  Kupp Greg", "wins": 10, "losses": 3, "ties": 0, "pf": 1771.4, "pa": 1682.6, "final_standing": 2, "regular_season_standing": 2}, {"year": 2020, "team_id": 5, "team_name": "My Kupp Runneth Over", "wins": 7, "losses": 5, "ties": 0, "pf": 1533.5, "pa": 1308.1, "final_standing": 5, "regular_season_standing": 5}, {"year": 2021, "team_id": 5, "team_name": "Lamb Chop", "wins": 11, "losses": 2, "ties": 0, "pf": 1774.3, "pa": 1479.3, "final_standing": 2, "regular_season_standing": 1}, {"year": 2022, "team_id": 5, "team_name": "Conner Into Bed", "wins": 8, "losses": 5, "ties": 0, "pf": 1664.8, "pa": 1466.6, "final_standing": 3, "regular_season_standing": 2}, {"year": 2023, "team_id": 5, "team_name": "Smelly Pitts", "wins": 10, "losses": 3, "ties": 0, "pf": 1605.4, "pa": 1393.8, "final_standing": 2, "regular_season_standing": 1}, {"year": 2024, "team_id": 5, "team_name": "Hall Pass", "wins": 5, "losses": 8, "ties": 0, "pf": 1356.1, "pa": 1528.3, "final_standing": 5, "regular_season_standing": 8}, {"year": 2025, "team_id": 5, "team_name": "If Brown Flush Down", "wins": 7, "losses": 6, "ties": 0, "pf": 1343.3, "pa": 1431.2, "final_standing": 6, "regular_season_standing": 5}]}, {"owner": "Robert Pluciennik", "team_names": ["Bye Week", "Cromartie's Kids", "Have an  A1 day", "Here comes the  Loseing streak", "I hate fantasy Football", "New year So much promise", "Rum Hams", "The Mountain", "Welker? I just  met her"], "seasons_played": 16, "total_wins": 104, "total_losses": 94, "total_ties": 1, "total_games": 199, "win_pct": 0.5251, "total_pf": 22293.6, "total_pa": 22044.4, "ppg": 112.03, "papg": 110.78, "championships": [2021], "runner_ups": [2022], "third_place": [2023], "last_place": [2014, 2015], "playoff_appearances": [2010, 2011, 2017, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "playoff_pct": 0.625, "best_season": {"year": 2019, "pf": 1740.8, "wins": 9, "losses": 4, "final": 4}, "worst_season": {"year": 2012, "pf": 1039.8, "wins": 4, "losses": 8, "final": 8}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1202.7, "final": 6}, {"year": 2011, "win_pct": 0.708, "wins": 8, "losses": 3, "pf": 1318.9, "final": 4}, {"year": 2012, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1039.8, "final": 8}, {"year": 2013, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1216.7, "final": 7}, {"year": 2014, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1195.4, "final": 10}, {"year": 2015, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1197.0, "final": 10}, {"year": 2016, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1117.3, "final": 7}, {"year": 2017, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1206.2, "final": 4}, {"year": 2018, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1608.2, "final": 9}, {"year": 2019, "win_pct": 0.692, "wins": 9, "losses": 4, "pf": 1740.8, "final": 4}, {"year": 2020, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1465.9, "final": 6}, {"year": 2021, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1635.4, "final": 1}, {"year": 2022, "win_pct": 0.769, "wins": 10, "losses": 3, "pf": 1634.6, "final": 2}, {"year": 2023, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1591.9, "final": 3}, {"year": 2024, "win_pct": 0.692, "wins": 9, "losses": 4, "pf": 1727.7, "final": 4}, {"year": 2025, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1395.1, "final": 5}], "season_history": [{"year": 2010, "team_id": 6, "team_name": "Cromartie's Kids", "wins": 5, "losses": 8, "ties": 0, "pf": 1202.7, "pa": 1289.2, "final_standing": 6, "regular_season_standing": 8}, {"year": 2011, "team_id": 6, "team_name": "Rum Hams", "wins": 8, "losses": 3, "ties": 1, "pf": 1318.9, "pa": 1117.8, "final_standing": 4, "regular_season_standing": 1}, {"year": 2012, "team_id": 6, "team_name": "Welker? I just  met her", "wins": 4, "losses": 8, "ties": 0, "pf": 1039.8, "pa": 1152.7, "final_standing": 8, "regular_season_standing": 10}, {"year": 2013, "team_id": 6, "team_name": "Have an  A1 day", "wins": 6, "losses": 6, "ties": 0, "pf": 1216.7, "pa": 1197.3, "final_standing": 7, "regular_season_standing": 6}, {"year": 2014, "team_id": 6, "team_name": "The Mountain", "wins": 4, "losses": 8, "ties": 0, "pf": 1195.4, "pa": 1258.0, "final_standing": 10, "regular_season_standing": 9}, {"year": 2015, "team_id": 6, "team_name": "Bye Week", "wins": 5, "losses": 7, "ties": 0, "pf": 1197.0, "pa": 1294.6, "final_standing": 10, "regular_season_standing": 8}, {"year": 2016, "team_id": 6, "team_name": "Here comes the  Loseing streak", "wins": 4, "losses": 8, "ties": 0, "pf": 1117.3, "pa": 1319.5, "final_standing": 7, "regular_season_standing": 9}, {"year": 2017, "team_id": 6, "team_name": "New year So much promise", "wins": 8, "losses": 4, "ties": 0, "pf": 1206.2, "pa": 1172.2, "final_standing": 4, "regular_season_standing": 4}, {"year": 2018, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 6, "losses": 6, "ties": 0, "pf": 1608.2, "pa": 1583.0, "final_standing": 9, "regular_season_standing": 7}, {"year": 2019, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 9, "losses": 4, "ties": 0, "pf": 1740.8, "pa": 1493.5, "final_standing": 4, "regular_season_standing": 3}, {"year": 2020, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 6, "losses": 6, "ties": 0, "pf": 1465.9, "pa": 1431.5, "final_standing": 6, "regular_season_standing": 7}, {"year": 2021, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 8, "losses": 5, "ties": 0, "pf": 1635.4, "pa": 1722.4, "final_standing": 1, "regular_season_standing": 3}, {"year": 2022, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 10, "losses": 3, "ties": 0, "pf": 1634.6, "pa": 1299.5, "final_standing": 2, "regular_season_standing": 1}, {"year": 2023, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 7, "losses": 6, "ties": 0, "pf": 1591.9, "pa": 1701.7, "final_standing": 3, "regular_season_standing": 3}, {"year": 2024, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 9, "losses": 4, "ties": 0, "pf": 1727.7, "pa": 1527.9, "final_standing": 4, "regular_season_standing": 1}, {"year": 2025, "team_id": 6, "team_name": "I hate fantasy Football", "wins": 5, "losses": 8, "ties": 0, "pf": 1395.1, "pa": 1483.6, "final_standing": 5, "regular_season_standing": 7}]}, {"owner": "Sean Henry", "team_names": ["Anyone But Howie", "Fields of Screams", "From The Woods To The Waller", "Fuckin Chad-ey Kathy", "Grab-um By The Puss", "Mr. Rodger's Neighborhood", "No You Lockett Up", "One Crabtree Hill", "Right In Da Kap ernick of Time", "Sand Nigga Please", "So Long As The Jalberts Lose", "The Infidels", "The Mad King Henry", "Tighty White TE", "What Can Brown Do For You?"], "seasons_played": 16, "total_wins": 88, "total_losses": 111, "total_ties": 0, "total_games": 199, "win_pct": 0.4422, "total_pf": 21456.4, "total_pa": 21893.6, "ppg": 107.82, "papg": 110.02, "championships": [2020], "runner_ups": [2010], "third_place": [2012, 2015], "last_place": [2019, 2021], "playoff_appearances": [2010, 2012, 2013, 2015, 2016, 2018, 2020, 2022, 2024], "playoff_pct": 0.562, "best_season": {"year": 2020, "pf": 1575.3, "wins": 7, "losses": 5, "final": 1}, "worst_season": {"year": 2014, "pf": 1067.1, "wins": 3, "losses": 9, "final": 8}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1306.3, "final": 2}, {"year": 2011, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1133.5, "final": 9}, {"year": 2012, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1288.3, "final": 3}, {"year": 2013, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1185.2, "final": 6}, {"year": 2014, "win_pct": 0.25, "wins": 3, "losses": 9, "pf": 1067.1, "final": 8}, {"year": 2015, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1232.9, "final": 3}, {"year": 2016, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1239.1, "final": 5}, {"year": 2017, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1121.0, "final": 7}, {"year": 2018, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1467.9, "final": 6}, {"year": 2019, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1519.2, "final": 10}, {"year": 2020, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1575.3, "final": 1}, {"year": 2021, "win_pct": 0.154, "wins": 2, "losses": 11, "pf": 1367.3, "final": 10}, {"year": 2022, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1535.6, "final": 6}, {"year": 2023, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1403.3, "final": 9}, {"year": 2024, "win_pct": 0.462, "wins": 6, "losses": 7, "pf": 1545.8, "final": 6}, {"year": 2025, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1468.6, "final": 8}], "season_history": [{"year": 2010, "team_id": 9, "team_name": "The Infidels", "wins": 8, "losses": 5, "ties": 0, "pf": 1306.3, "pa": 1228.1, "final_standing": 2, "regular_season_standing": 2}, {"year": 2011, "team_id": 9, "team_name": "The Infidels", "wins": 5, "losses": 7, "ties": 0, "pf": 1133.5, "pa": 1203.4, "final_standing": 9, "regular_season_standing": 7}, {"year": 2012, "team_id": 9, "team_name": "Mr. Rodger's Neighborhood", "wins": 8, "losses": 4, "ties": 0, "pf": 1288.3, "pa": 1131.4, "final_standing": 3, "regular_season_standing": 2}, {"year": 2013, "team_id": 9, "team_name": "Sand Nigga Please", "wins": 6, "losses": 6, "ties": 0, "pf": 1185.2, "pa": 1215.9, "final_standing": 6, "regular_season_standing": 7}, {"year": 2014, "team_id": 9, "team_name": "Fuckin Chad-ey Kathy", "wins": 3, "losses": 9, "ties": 0, "pf": 1067.1, "pa": 1182.0, "final_standing": 8, "regular_season_standing": 10}, {"year": 2015, "team_id": 9, "team_name": "So Long As The Jalberts Lose", "wins": 7, "losses": 5, "ties": 0, "pf": 1232.9, "pa": 1123.3, "final_standing": 3, "regular_season_standing": 3}, {"year": 2016, "team_id": 9, "team_name": "Grab-um By The Puss", "wins": 5, "losses": 7, "ties": 0, "pf": 1239.1, "pa": 1133.7, "final_standing": 5, "regular_season_standing": 6}, {"year": 2017, "team_id": 9, "team_name": "Right In Da Kap ernick of Time", "wins": 7, "losses": 5, "ties": 0, "pf": 1121.0, "pa": 1176.6, "final_standing": 7, "regular_season_standing": 6}, {"year": 2018, "team_id": 9, "team_name": "One Crabtree Hill", "wins": 4, "losses": 8, "ties": 0, "pf": 1467.9, "pa": 1580.0, "final_standing": 6, "regular_season_standing": 8}, {"year": 2019, "team_id": 9, "team_name": "No You Lockett Up", "wins": 4, "losses": 9, "ties": 0, "pf": 1519.2, "pa": 1758.1, "final_standing": 10, "regular_season_standing": 9}, {"year": 2020, "team_id": 9, "team_name": "Anyone But Howie", "wins": 7, "losses": 5, "ties": 0, "pf": 1575.3, "pa": 1504.6, "final_standing": 1, "regular_season_standing": 4}, {"year": 2021, "team_id": 9, "team_name": "From The Woods To The Waller", "wins": 2, "losses": 11, "ties": 0, "pf": 1367.3, "pa": 1589.2, "final_standing": 10, "regular_season_standing": 10}, {"year": 2022, "team_id": 9, "team_name": "The Mad King Henry", "wins": 7, "losses": 6, "ties": 0, "pf": 1535.6, "pa": 1476.6, "final_standing": 6, "regular_season_standing": 5}, {"year": 2023, "team_id": 9, "team_name": "Fields of Screams", "wins": 5, "losses": 8, "ties": 0, "pf": 1403.3, "pa": 1604.0, "final_standing": 9, "regular_season_standing": 8}, {"year": 2024, "team_id": 9, "team_name": "Tighty White TE", "wins": 6, "losses": 7, "ties": 0, "pf": 1545.8, "pa": 1474.2, "final_standing": 6, "regular_season_standing": 6}, {"year": 2025, "team_id": 9, "team_name": "What Can Brown Do For You?", "wins": 4, "losses": 9, "ties": 0, "pf": 1468.6, "pa": 1512.5, "final_standing": 8, "regular_season_standing": 10}]}, {"owner": "Cornelius Hourihan", "team_names": ["Andy's a Cunt", "Belicheck Yoself", "Brady's Irish Kareem", "Can I Burrow  A Feeling", "Corndog Millionaire ", "Cruz Missiles", "Fleeced", "I Just Hope We Can Win a Game!", "I'm going to win so bigly", "Kaeperknicker Bockers", "Nah,Nah, Najee  Gonna Work Here", "Sandy Andy (RIP)", "Strange-r Danger", "The Micks", "The Neil Category", "Wat\u2019s Cook\u2019n"], "seasons_played": 16, "total_wins": 83, "total_losses": 116, "total_ties": 0, "total_games": 199, "win_pct": 0.4171, "total_pf": 21215.0, "total_pa": 22107.7, "ppg": 106.61, "papg": 111.09, "championships": [2025], "runner_ups": [2017], "third_place": [2014], "last_place": [2010, 2018], "playoff_appearances": [2011, 2014, 2015, 2017, 2019, 2022, 2025], "playoff_pct": 0.438, "best_season": {"year": 2020, "pf": 1614.9, "wins": 6, "losses": 6, "final": 8}, "worst_season": {"year": 2013, "pf": 1082.0, "wins": 2, "losses": 10, "final": 9}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1255.6, "final": 10}, {"year": 2011, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1093.9, "final": 6}, {"year": 2012, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1260.0, "final": 7}, {"year": 2013, "win_pct": 0.167, "wins": 2, "losses": 10, "pf": 1082.0, "final": 9}, {"year": 2014, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1298.9, "final": 3}, {"year": 2015, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1255.8, "final": 5}, {"year": 2016, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1112.4, "final": 9}, {"year": 2017, "win_pct": 0.667, "wins": 8, "losses": 4, "pf": 1278.1, "final": 2}, {"year": 2018, "win_pct": 0.25, "wins": 3, "losses": 9, "pf": 1394.1, "final": 10}, {"year": 2019, "win_pct": 0.462, "wins": 6, "losses": 7, "pf": 1461.9, "final": 6}, {"year": 2020, "win_pct": 0.5, "wins": 6, "losses": 6, "pf": 1614.9, "final": 8}, {"year": 2021, "win_pct": 0.231, "wins": 3, "losses": 10, "pf": 1489.9, "final": 7}, {"year": 2022, "win_pct": 0.615, "wins": 8, "losses": 5, "pf": 1438.5, "final": 4}, {"year": 2023, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1399.2, "final": 8}, {"year": 2024, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1321.4, "final": 8}, {"year": 2025, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1458.4, "final": 1}], "season_history": [{"year": 2010, "team_id": 3, "team_name": "Corndog Millionaire ", "wins": 5, "losses": 8, "ties": 0, "pf": 1255.6, "pa": 1198.1, "final_standing": 10, "regular_season_standing": 7}, {"year": 2011, "team_id": 3, "team_name": "Belicheck Yoself", "wins": 5, "losses": 7, "ties": 0, "pf": 1093.9, "pa": 1251.4, "final_standing": 6, "regular_season_standing": 8}, {"year": 2012, "team_id": 3, "team_name": "Cruz Missiles", "wins": 5, "losses": 7, "ties": 0, "pf": 1260.0, "pa": 1230.1, "final_standing": 7, "regular_season_standing": 6}, {"year": 2013, "team_id": 3, "team_name": "Kaeperknicker Bockers", "wins": 2, "losses": 10, "ties": 0, "pf": 1082.0, "pa": 1348.7, "final_standing": 9, "regular_season_standing": 9}, {"year": 2014, "team_id": 3, "team_name": "Andy's a Cunt", "wins": 7, "losses": 5, "ties": 0, "pf": 1298.9, "pa": 1226.6, "final_standing": 3, "regular_season_standing": 4}, {"year": 2015, "team_id": 3, "team_name": "The Neil Category", "wins": 5, "losses": 7, "ties": 0, "pf": 1255.8, "pa": 1281.3, "final_standing": 5, "regular_season_standing": 7}, {"year": 2016, "team_id": 3, "team_name": "I'm going to win so bigly", "wins": 5, "losses": 7, "ties": 0, "pf": 1112.4, "pa": 1179.5, "final_standing": 9, "regular_season_standing": 7}, {"year": 2017, "team_id": 3, "team_name": "Sandy Andy (RIP)", "wins": 8, "losses": 4, "ties": 0, "pf": 1278.1, "pa": 1109.0, "final_standing": 2, "regular_season_standing": 3}, {"year": 2018, "team_id": 3, "team_name": "Brady's Irish Kareem", "wins": 3, "losses": 9, "ties": 0, "pf": 1394.1, "pa": 1670.0, "final_standing": 10, "regular_season_standing": 9}, {"year": 2019, "team_id": 3, "team_name": "Wat\u2019s Cook\u2019n", "wins": 6, "losses": 7, "ties": 0, "pf": 1461.9, "pa": 1600.5, "final_standing": 6, "regular_season_standing": 6}, {"year": 2020, "team_id": 3, "team_name": "I Just Hope We Can Win a Game!", "wins": 6, "losses": 6, "ties": 0, "pf": 1614.9, "pa": 1546.7, "final_standing": 8, "regular_season_standing": 6}, {"year": 2021, "team_id": 3, "team_name": "Nah,Nah, Najee  Gonna Work Here", "wins": 3, "losses": 10, "ties": 0, "pf": 1489.9, "pa": 1639.5, "final_standing": 7, "regular_season_standing": 9}, {"year": 2022, "team_id": 3, "team_name": "Can I Burrow  A Feeling", "wins": 8, "losses": 5, "ties": 0, "pf": 1438.5, "pa": 1474.4, "final_standing": 4, "regular_season_standing": 4}, {"year": 2023, "team_id": 3, "team_name": "The Micks", "wins": 4, "losses": 9, "ties": 0, "pf": 1399.2, "pa": 1566.3, "final_standing": 8, "regular_season_standing": 10}, {"year": 2024, "team_id": 3, "team_name": "Fleeced", "wins": 4, "losses": 9, "ties": 0, "pf": 1321.4, "pa": 1440.2, "final_standing": 8, "regular_season_standing": 9}, {"year": 2025, "team_id": 3, "team_name": "Strange-r Danger", "wins": 7, "losses": 6, "ties": 0, "pf": 1458.4, "pa": 1345.4, "final_standing": 1, "regular_season_standing": 4}]}, {"owner": "TJ Doody", "team_names": ["CALLOF DOODY", "Doody Blues", "I TOUCHDOWN THERE", "Lynch Mob", "Pall Smenis", "Ricin  Cigarette ", "Rudy doody", "Team heartojacktatum"], "seasons_played": 16, "total_wins": 70, "total_losses": 128, "total_ties": 1, "total_games": 199, "win_pct": 0.3543, "total_pf": 20923.1, "total_pa": 22489.9, "ppg": 105.14, "papg": 113.01, "championships": [], "runner_ups": [], "third_place": [2025], "last_place": [], "playoff_appearances": [2012, 2013, 2014, 2016, 2023, 2025], "playoff_pct": 0.375, "best_season": {"year": 2025, "pf": 1514.6, "wins": 8, "losses": 4, "final": 3}, "worst_season": {"year": 2017, "pf": 929.1, "wins": 0, "losses": 12, "final": 9}, "win_pct_by_year": [{"year": 2010, "win_pct": 0.308, "wins": 4, "losses": 9, "pf": 1180.8, "final": 8}, {"year": 2011, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1296.3, "final": 7}, {"year": 2012, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1288.4, "final": 4}, {"year": 2013, "win_pct": 0.583, "wins": 7, "losses": 5, "pf": 1286.5, "final": 4}, {"year": 2014, "win_pct": 0.417, "wins": 5, "losses": 7, "pf": 1227.3, "final": 5}, {"year": 2015, "win_pct": 0.25, "wins": 3, "losses": 9, "pf": 1134.0, "final": 7}, {"year": 2016, "win_pct": 0.333, "wins": 4, "losses": 8, "pf": 1213.9, "final": 6}, {"year": 2017, "win_pct": 0.0, "wins": 0, "losses": 12, "pf": 929.1, "final": 9}, {"year": 2018, "win_pct": 0.167, "wins": 2, "losses": 10, "pf": 1459.6, "final": 7}, {"year": 2019, "win_pct": 0.077, "wins": 1, "losses": 12, "pf": 1380.2, "final": 8}, {"year": 2020, "win_pct": 0.167, "wins": 2, "losses": 10, "pf": 1297.7, "final": 9}, {"year": 2021, "win_pct": 0.538, "wins": 7, "losses": 6, "pf": 1459.8, "final": 8}, {"year": 2022, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1404.2, "final": 9}, {"year": 2023, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1459.9, "final": 6}, {"year": 2024, "win_pct": 0.385, "wins": 5, "losses": 8, "pf": 1390.8, "final": 9}, {"year": 2025, "win_pct": 0.654, "wins": 8, "losses": 4, "pf": 1514.6, "final": 3}], "season_history": [{"year": 2010, "team_id": 10, "team_name": "Team heartojacktatum", "wins": 4, "losses": 9, "ties": 0, "pf": 1180.8, "pa": 1357.2, "final_standing": 8, "regular_season_standing": 9}, {"year": 2011, "team_id": 10, "team_name": "CALLOF DOODY", "wins": 5, "losses": 7, "ties": 0, "pf": 1296.3, "pa": 1366.9, "final_standing": 7, "regular_season_standing": 6}, {"year": 2012, "team_id": 10, "team_name": "I TOUCHDOWN THERE", "wins": 7, "losses": 5, "ties": 0, "pf": 1288.4, "pa": 1212.2, "final_standing": 4, "regular_season_standing": 4}, {"year": 2013, "team_id": 10, "team_name": "Ricin  Cigarette ", "wins": 7, "losses": 5, "ties": 0, "pf": 1286.5, "pa": 1161.1, "final_standing": 4, "regular_season_standing": 4}, {"year": 2014, "team_id": 10, "team_name": "Lynch Mob", "wins": 5, "losses": 7, "ties": 0, "pf": 1227.3, "pa": 1178.1, "final_standing": 5, "regular_season_standing": 7}, {"year": 2015, "team_id": 10, "team_name": "Pall Smenis", "wins": 3, "losses": 9, "ties": 0, "pf": 1134.0, "pa": 1251.5, "final_standing": 7, "regular_season_standing": 10}, {"year": 2016, "team_id": 10, "team_name": "Pall Smenis", "wins": 4, "losses": 8, "ties": 0, "pf": 1213.9, "pa": 1331.5, "final_standing": 6, "regular_season_standing": 8}, {"year": 2017, "team_id": 10, "team_name": "Pall Smenis", "wins": 0, "losses": 12, "ties": 0, "pf": 929.1, "pa": 1195.4, "final_standing": 9, "regular_season_standing": 10}, {"year": 2018, "team_id": 10, "team_name": "Doody Blues", "wins": 2, "losses": 10, "ties": 0, "pf": 1459.6, "pa": 1732.2, "final_standing": 7, "regular_season_standing": 10}, {"year": 2019, "team_id": 10, "team_name": "Doody Blues", "wins": 1, "losses": 12, "ties": 0, "pf": 1380.2, "pa": 1594.9, "final_standing": 8, "regular_season_standing": 10}, {"year": 2020, "team_id": 10, "team_name": "Doody Blues", "wins": 2, "losses": 10, "ties": 0, "pf": 1297.7, "pa": 1512.2, "final_standing": 9, "regular_season_standing": 10}, {"year": 2021, "team_id": 10, "team_name": "Doody Blues", "wins": 7, "losses": 6, "ties": 0, "pf": 1459.8, "pa": 1623.7, "final_standing": 8, "regular_season_standing": 6}, {"year": 2022, "team_id": 10, "team_name": "Doody Blues", "wins": 5, "losses": 8, "ties": 0, "pf": 1404.2, "pa": 1493.6, "final_standing": 9, "regular_season_standing": 7}, {"year": 2023, "team_id": 10, "team_name": "Rudy doody", "wins": 5, "losses": 8, "ties": 0, "pf": 1459.9, "pa": 1473.1, "final_standing": 6, "regular_season_standing": 7}, {"year": 2024, "team_id": 10, "team_name": "Rudy doody", "wins": 5, "losses": 8, "ties": 0, "pf": 1390.8, "pa": 1569.7, "final_standing": 9, "regular_season_standing": 7}, {"year": 2025, "team_id": 10, "team_name": "Rudy doody", "wins": 8, "losses": 4, "ties": 1, "pf": 1514.6, "pa": 1436.6, "final_standing": 3, "regular_season_standing": 2}]}], "h2h": {"Thomas Pluciennik": {"Greg Jalbert": {"wins": 4, "losses": 7, "ties": 0, "pf": 1369.3999999999999, "pa": 1525.9999999999998, "games": 11, "matchups": []}, "Eric Jalbert": {"wins": 6, "losses": 7, "ties": 0, "pf": 1713.9999999999998, "pa": 1600.8, "games": 13, "matchups": []}, "TJ Doody": {"wins": 10, "losses": 4, "ties": 0, "pf": 2102.1, "pa": 1711.6000000000001, "games": 14, "matchups": []}, "Sean Henry": {"wins": 11, "losses": 1, "ties": 0, "pf": 1649.5000000000002, "pa": 1279.1000000000001, "games": 12, "matchups": []}, "Cornelius Hourihan": {"wins": 8, "losses": 3, "ties": 0, "pf": 1489.3000000000002, "pa": 1511.6000000000001, "games": 11, "matchups": []}, "Andrew Howard": {"wins": 4, "losses": 7, "ties": 0, "pf": 1586.1000000000001, "pa": 1817.6, "games": 11, "matchups": []}, "Chad Brodeur": {"wins": 2, "losses": 7, "ties": 0, "pf": 894.4000000000001, "pa": 1020.1, "games": 9, "matchups": []}, "Matt Howard": {"wins": 8, "losses": 4, "ties": 0, "pf": 1511.4, "pa": 1274.8, "games": 12, "matchups": []}, "Robert Pluciennik": {"wins": 8, "losses": 4, "ties": 0, "pf": 1953.8000000000002, "pa": 1800.1000000000004, "games": 12, "matchups": []}}, "Greg Jalbert": {"Thomas Pluciennik": {"wins": 7, "losses": 4, "ties": 0, "pf": 1525.9999999999998, "pa": 1369.3999999999999, "games": 11, "matchups": []}, "Chad Brodeur": {"wins": 9, "losses": 4, "ties": 0, "pf": 1686.7000000000003, "pa": 1609.3999999999999, "games": 13, "matchups": []}, "Eric Jalbert": {"wins": 3, "losses": 7, "ties": 0, "pf": 1068.8000000000002, "pa": 1103.2, "games": 10, "matchups": []}, "Andrew Howard": {"wins": 6, "losses": 8, "ties": 0, "pf": 1860.6000000000001, "pa": 1889.1999999999998, "games": 14, "matchups": []}, "Sean Henry": {"wins": 5, "losses": 7, "ties": 0, "pf": 1597.3, "pa": 1695.0000000000002, "games": 12, "matchups": []}, "Robert Pluciennik": {"wins": 2, "losses": 10, "ties": 0, "pf": 1475.9, "pa": 1669.6999999999998, "games": 12, "matchups": []}, "Cornelius Hourihan": {"wins": 7, "losses": 3, "ties": 0, "pf": 1177.3, "pa": 1090.6, "games": 10, "matchups": []}, "TJ Doody": {"wins": 9, "losses": 3, "ties": 0, "pf": 1539.6, "pa": 1356.9, "games": 12, "matchups": []}, "Matt Howard": {"wins": 7, "losses": 4, "ties": 0, "pf": 1505.7, "pa": 1416.6, "games": 11, "matchups": []}}, "Andrew Howard": {"Cornelius Hourihan": {"wins": 4, "losses": 5, "ties": 0, "pf": 1148.9, "pa": 1101.0, "games": 9, "matchups": []}, "Matt Howard": {"wins": 7, "losses": 5, "ties": 0, "pf": 1415.7, "pa": 1273.5, "games": 12, "matchups": []}, "Chad Brodeur": {"wins": 8, "losses": 3, "ties": 0, "pf": 1610.7, "pa": 1522.9999999999998, "games": 11, "matchups": []}, "Greg Jalbert": {"wins": 8, "losses": 6, "ties": 0, "pf": 1889.1999999999998, "pa": 1860.6000000000001, "games": 14, "matchups": []}, "TJ Doody": {"wins": 6, "losses": 3, "ties": 1, "pf": 1213.0000000000002, "pa": 1082.6000000000001, "games": 10, "matchups": []}, "Thomas Pluciennik": {"wins": 7, "losses": 4, "ties": 0, "pf": 1817.6, "pa": 1586.1000000000001, "games": 11, "matchups": []}, "Robert Pluciennik": {"wins": 8, "losses": 5, "ties": 0, "pf": 1792.7, "pa": 1556.7000000000003, "games": 13, "matchups": []}, "Eric Jalbert": {"wins": 3, "losses": 10, "ties": 0, "pf": 1799.7, "pa": 2096.5000000000005, "games": 13, "matchups": []}, "Sean Henry": {"wins": 6, "losses": 5, "ties": 0, "pf": 1627.9, "pa": 1646.4999999999998, "games": 11, "matchups": []}}, "Cornelius Hourihan": {"Andrew Howard": {"wins": 5, "losses": 4, "ties": 0, "pf": 1101.0, "pa": 1148.9, "games": 9, "matchups": []}, "Sean Henry": {"wins": 4, "losses": 8, "ties": 0, "pf": 1375.6000000000001, "pa": 1522.4999999999998, "games": 12, "matchups": []}, "Matt Howard": {"wins": 11, "losses": 6, "ties": 0, "pf": 2310.7999999999997, "pa": 2148.4999999999995, "games": 17, "matchups": []}, "TJ Doody": {"wins": 6, "losses": 5, "ties": 0, "pf": 1340.6, "pa": 1277.0999999999997, "games": 11, "matchups": []}, "Thomas Pluciennik": {"wins": 3, "losses": 8, "ties": 0, "pf": 1511.6000000000001, "pa": 1489.3000000000002, "games": 11, "matchups": []}, "Eric Jalbert": {"wins": 3, "losses": 8, "ties": 0, "pf": 1339.3000000000002, "pa": 1589.3999999999996, "games": 11, "matchups": []}, "Greg Jalbert": {"wins": 3, "losses": 7, "ties": 0, "pf": 1090.6, "pa": 1177.3, "games": 10, "matchups": []}, "Robert Pluciennik": {"wins": 4, "losses": 8, "ties": 0, "pf": 1587.1000000000001, "pa": 1643.4, "games": 12, "matchups": []}, "Chad Brodeur": {"wins": 6, "losses": 6, "ties": 0, "pf": 1682.3, "pa": 1724.4999999999998, "games": 12, "matchups": []}}, "Chad Brodeur": {"TJ Doody": {"wins": 7, "losses": 5, "ties": 0, "pf": 1684.3000000000002, "pa": 1733.0000000000002, "games": 12, "matchups": []}, "Greg Jalbert": {"wins": 4, "losses": 9, "ties": 0, "pf": 1609.3999999999999, "pa": 1686.7000000000003, "games": 13, "matchups": []}, "Andrew Howard": {"wins": 3, "losses": 8, "ties": 0, "pf": 1522.9999999999998, "pa": 1610.7, "games": 11, "matchups": []}, "Robert Pluciennik": {"wins": 3, "losses": 7, "ties": 0, "pf": 1120.0000000000002, "pa": 1490.3, "games": 10, "matchups": []}, "Eric Jalbert": {"wins": 4, "losses": 7, "ties": 0, "pf": 1350.1999999999998, "pa": 1481.7, "games": 11, "matchups": []}, "Matt Howard": {"wins": 6, "losses": 7, "ties": 0, "pf": 1506.8000000000002, "pa": 1498.9, "games": 13, "matchups": []}, "Thomas Pluciennik": {"wins": 7, "losses": 2, "ties": 0, "pf": 1020.1, "pa": 894.4000000000001, "games": 9, "matchups": []}, "Sean Henry": {"wins": 10, "losses": 4, "ties": 0, "pf": 1968.4, "pa": 1928.8999999999996, "games": 14, "matchups": []}, "Cornelius Hourihan": {"wins": 6, "losses": 6, "ties": 0, "pf": 1724.4999999999998, "pa": 1682.3, "games": 12, "matchups": []}}, "TJ Doody": {"Chad Brodeur": {"wins": 5, "losses": 7, "ties": 0, "pf": 1733.0000000000002, "pa": 1684.3000000000002, "games": 12, "matchups": []}, "Robert Pluciennik": {"wins": 5, "losses": 8, "ties": 0, "pf": 1543.5000000000002, "pa": 1619.3000000000004, "games": 13, "matchups": []}, "Thomas Pluciennik": {"wins": 4, "losses": 10, "ties": 0, "pf": 1711.6000000000001, "pa": 2102.1, "games": 14, "matchups": []}, "Cornelius Hourihan": {"wins": 5, "losses": 6, "ties": 0, "pf": 1277.0999999999997, "pa": 1340.6, "games": 11, "matchups": []}, "Andrew Howard": {"wins": 3, "losses": 6, "ties": 1, "pf": 1082.6000000000001, "pa": 1213.0000000000002, "games": 10, "matchups": []}, "Sean Henry": {"wins": 6, "losses": 7, "ties": 0, "pf": 1590.1, "pa": 1551.8000000000002, "games": 13, "matchups": []}, "Matt Howard": {"wins": 5, "losses": 5, "ties": 0, "pf": 1418.6, "pa": 1318.3000000000002, "games": 10, "matchups": []}, "Greg Jalbert": {"wins": 3, "losses": 9, "ties": 0, "pf": 1356.9, "pa": 1539.6, "games": 12, "matchups": []}, "Eric Jalbert": {"wins": 3, "losses": 7, "ties": 0, "pf": 1274.0, "pa": 1406.8999999999999, "games": 10, "matchups": []}}, "Robert Pluciennik": {"Eric Jalbert": {"wins": 9, "losses": 5, "ties": 0, "pf": 2193.5, "pa": 1975.1000000000001, "games": 14, "matchups": []}, "TJ Doody": {"wins": 8, "losses": 5, "ties": 0, "pf": 1619.3000000000004, "pa": 1543.5000000000002, "games": 13, "matchups": []}, "Sean Henry": {"wins": 7, "losses": 2, "ties": 0, "pf": 1238.4, "pa": 1048.7, "games": 9, "matchups": []}, "Chad Brodeur": {"wins": 7, "losses": 3, "ties": 0, "pf": 1490.3, "pa": 1120.0000000000002, "games": 10, "matchups": []}, "Matt Howard": {"wins": 4, "losses": 6, "ties": 0, "pf": 1376.1, "pa": 1321.1, "games": 10, "matchups": []}, "Greg Jalbert": {"wins": 10, "losses": 2, "ties": 0, "pf": 1669.6999999999998, "pa": 1475.9, "games": 12, "matchups": []}, "Andrew Howard": {"wins": 5, "losses": 8, "ties": 0, "pf": 1556.7000000000003, "pa": 1792.7, "games": 13, "matchups": []}, "Cornelius Hourihan": {"wins": 8, "losses": 4, "ties": 0, "pf": 1643.4, "pa": 1587.1000000000001, "games": 12, "matchups": []}, "Thomas Pluciennik": {"wins": 4, "losses": 8, "ties": 0, "pf": 1800.1000000000004, "pa": 1953.8000000000002, "games": 12, "matchups": []}}, "Eric Jalbert": {"Robert Pluciennik": {"wins": 5, "losses": 9, "ties": 0, "pf": 1975.1000000000001, "pa": 2193.5, "games": 14, "matchups": []}, "Thomas Pluciennik": {"wins": 7, "losses": 6, "ties": 0, "pf": 1600.8, "pa": 1713.9999999999998, "games": 13, "matchups": []}, "Greg Jalbert": {"wins": 7, "losses": 3, "ties": 0, "pf": 1103.2, "pa": 1068.8000000000002, "games": 10, "matchups": []}, "Matt Howard": {"wins": 7, "losses": 3, "ties": 0, "pf": 1377.7, "pa": 1217.5, "games": 10, "matchups": []}, "Chad Brodeur": {"wins": 7, "losses": 4, "ties": 0, "pf": 1481.7, "pa": 1350.1999999999998, "games": 11, "matchups": []}, "Cornelius Hourihan": {"wins": 8, "losses": 3, "ties": 0, "pf": 1589.3999999999996, "pa": 1339.3000000000002, "games": 11, "matchups": []}, "Sean Henry": {"wins": 9, "losses": 3, "ties": 0, "pf": 1677.7, "pa": 1511.2, "games": 12, "matchups": []}, "Andrew Howard": {"wins": 10, "losses": 3, "ties": 0, "pf": 2096.5000000000005, "pa": 1799.7, "games": 13, "matchups": []}, "TJ Doody": {"wins": 7, "losses": 3, "ties": 0, "pf": 1406.8999999999999, "pa": 1274.0, "games": 10, "matchups": []}}, "Matt Howard": {"Sean Henry": {"wins": 5, "losses": 5, "ties": 0, "pf": 1225.2, "pa": 1287.6000000000001, "games": 10, "matchups": []}, "Andrew Howard": {"wins": 5, "losses": 7, "ties": 0, "pf": 1273.5, "pa": 1415.7, "games": 12, "matchups": []}, "Cornelius Hourihan": {"wins": 6, "losses": 11, "ties": 0, "pf": 2148.4999999999995, "pa": 2310.7999999999997, "games": 17, "matchups": []}, "Eric Jalbert": {"wins": 3, "losses": 7, "ties": 0, "pf": 1217.5, "pa": 1377.7, "games": 10, "matchups": []}, "Robert Pluciennik": {"wins": 6, "losses": 4, "ties": 0, "pf": 1321.1, "pa": 1376.1, "games": 10, "matchups": []}, "Chad Brodeur": {"wins": 7, "losses": 6, "ties": 0, "pf": 1498.9, "pa": 1506.8000000000002, "games": 13, "matchups": []}, "TJ Doody": {"wins": 5, "losses": 5, "ties": 0, "pf": 1318.3000000000002, "pa": 1418.6, "games": 10, "matchups": []}, "Thomas Pluciennik": {"wins": 4, "losses": 8, "ties": 0, "pf": 1274.8, "pa": 1511.4, "games": 12, "matchups": []}, "Greg Jalbert": {"wins": 4, "losses": 7, "ties": 0, "pf": 1416.6, "pa": 1505.7, "games": 11, "matchups": []}}, "Sean Henry": {"Matt Howard": {"wins": 5, "losses": 5, "ties": 0, "pf": 1287.6000000000001, "pa": 1225.2, "games": 10, "matchups": []}, "Cornelius Hourihan": {"wins": 8, "losses": 4, "ties": 0, "pf": 1522.4999999999998, "pa": 1375.6000000000001, "games": 12, "matchups": []}, "Robert Pluciennik": {"wins": 2, "losses": 7, "ties": 0, "pf": 1048.7, "pa": 1238.4, "games": 9, "matchups": []}, "Thomas Pluciennik": {"wins": 1, "losses": 11, "ties": 0, "pf": 1279.1000000000001, "pa": 1649.5000000000002, "games": 12, "matchups": []}, "Greg Jalbert": {"wins": 7, "losses": 5, "ties": 0, "pf": 1695.0000000000002, "pa": 1597.3, "games": 12, "matchups": []}, "TJ Doody": {"wins": 7, "losses": 6, "ties": 0, "pf": 1551.8000000000002, "pa": 1590.1, "games": 13, "matchups": []}, "Eric Jalbert": {"wins": 3, "losses": 9, "ties": 0, "pf": 1511.2, "pa": 1677.7, "games": 12, "matchups": []}, "Chad Brodeur": {"wins": 4, "losses": 10, "ties": 0, "pf": 1928.8999999999996, "pa": 1968.4, "games": 14, "matchups": []}, "Andrew Howard": {"wins": 5, "losses": 6, "ties": 0, "pf": 1646.4999999999998, "pa": 1627.9, "games": 11, "matchups": []}}}, "highest_scores": [{"year": 2019, "week": 1, "owner": "Andrew Howard", "score": 200.8, "opponent": "Cornelius Hourihan", "opp_score": 165.9, "result": "W", "is_playoff": false}, {"year": 2024, "week": 11, "owner": "Thomas Pluciennik", "score": 198.3, "opponent": "TJ Doody", "opp_score": 85.7, "result": "W", "is_playoff": false}, {"year": 2021, "week": 4, "owner": "Andrew Howard", "score": 196.7, "opponent": "Robert Pluciennik", "opp_score": 73.4, "result": "W", "is_playoff": false}, {"year": 2023, "week": 4, "owner": "Andrew Howard", "score": 195.6, "opponent": "Robert Pluciennik", "opp_score": 102.9, "result": "W", "is_playoff": false}, {"year": 2020, "week": 12, "owner": "Robert Pluciennik", "score": 195.4, "opponent": "Chad Brodeur", "opp_score": 107.5, "result": "W", "is_playoff": false}, {"year": 2021, "week": 5, "owner": "Eric Jalbert", "score": 193.9, "opponent": "TJ Doody", "opp_score": 97.9, "result": "W", "is_playoff": false}, {"year": 2019, "week": 8, "owner": "Eric Jalbert", "score": 193.1, "opponent": "Andrew Howard", "opp_score": 157.6, "result": "W", "is_playoff": false}, {"year": 2020, "week": 12, "owner": "Andrew Howard", "score": 192.2, "opponent": "Sean Henry", "opp_score": 166.4, "result": "W", "is_playoff": false}, {"year": 2020, "week": 2, "owner": "Cornelius Hourihan", "score": 191.6, "opponent": "Chad Brodeur", "opp_score": 157.8, "result": "W", "is_playoff": false}, {"year": 2019, "week": 5, "owner": "Eric Jalbert", "score": 187.0, "opponent": "Chad Brodeur", "opp_score": 143.3, "result": "W", "is_playoff": false}, {"year": 2019, "week": 3, "owner": "Robert Pluciennik", "score": 186.9, "opponent": "Sean Henry", "opp_score": 105.5, "result": "W", "is_playoff": false}, {"year": 2020, "week": 1, "owner": "Greg Jalbert", "score": 182.1, "opponent": "Thomas Pluciennik", "opp_score": 125.4, "result": "W", "is_playoff": false}, {"year": 2025, "week": 10, "owner": "Chad Brodeur", "score": 181.1, "opponent": "Greg Jalbert", "opp_score": 125.5, "result": "W", "is_playoff": false}, {"year": 2019, "week": 3, "owner": "Andrew Howard", "score": 180.8, "opponent": "Chad Brodeur", "opp_score": 139.3, "result": "W", "is_playoff": false}, {"year": 2022, "week": 11, "owner": "Eric Jalbert", "score": 180.6, "opponent": "Chad Brodeur", "opp_score": 136.7, "result": "W", "is_playoff": false}], "lowest_scores": [{"year": 2021, "week": 10, "owner": "TJ Doody", "score": 45.5, "opponent": "Thomas Pluciennik", "opp_score": 132.1, "result": "L", "is_playoff": false}, {"year": 2020, "week": 9, "owner": "Matt Howard", "score": 50.3, "opponent": "Sean Henry", "opp_score": 150.3, "result": "L", "is_playoff": false}, {"year": 2020, "week": 11, "owner": "TJ Doody", "score": 54.9, "opponent": "Eric Jalbert", "opp_score": 141.4, "result": "L", "is_playoff": false}, {"year": 2025, "week": 1, "owner": "Sean Henry", "score": 56.7, "opponent": "TJ Doody", "opp_score": 101.6, "result": "L", "is_playoff": false}, {"year": 2025, "week": 10, "owner": "Robert Pluciennik", "score": 60.4, "opponent": "Andrew Howard", "opp_score": 77.2, "result": "L", "is_playoff": false}, {"year": 2022, "week": 3, "owner": "Chad Brodeur", "score": 60.6, "opponent": "Matt Howard", "opp_score": 108.3, "result": "L", "is_playoff": false}, {"year": 2022, "week": 1, "owner": "TJ Doody", "score": 62.1, "opponent": "Thomas Pluciennik", "opp_score": 151.9, "result": "L", "is_playoff": false}, {"year": 2023, "week": 6, "owner": "TJ Doody", "score": 63.3, "opponent": "Andrew Howard", "opp_score": 111.1, "result": "L", "is_playoff": false}, {"year": 2025, "week": 2, "owner": "Matt Howard", "score": 63.8, "opponent": "Andrew Howard", "opp_score": 129.6, "result": "L", "is_playoff": false}, {"year": 2020, "week": 8, "owner": "TJ Doody", "score": 65.5, "opponent": "Chad Brodeur", "opp_score": 92.6, "result": "L", "is_playoff": false}, {"year": 2019, "week": 7, "owner": "Matt Howard", "score": 66.5, "opponent": "TJ Doody", "opp_score": 79.9, "result": "L", "is_playoff": false}, {"year": 2022, "week": 10, "owner": "TJ Doody", "score": 66.5, "opponent": "Thomas Pluciennik", "opp_score": 104.1, "result": "L", "is_playoff": false}, {"year": 2022, "week": 12, "owner": "Chad Brodeur", "score": 67.2, "opponent": "Matt Howard", "opp_score": 115.5, "result": "L", "is_playoff": false}, {"year": 2022, "week": 7, "owner": "Greg Jalbert", "score": 68.2, "opponent": "Eric Jalbert", "opp_score": 97.8, "result": "L", "is_playoff": false}, {"year": 2024, "week": 7, "owner": "Eric Jalbert", "score": 68.2, "opponent": "TJ Doody", "opp_score": 80.6, "result": "L", "is_playoff": false}], "biggest_blowouts": [{"year": 2021, "week": 4, "home_owner": "Andrew Howard", "away_owner": "Robert Pluciennik", "home_score": 196.7, "away_score": 73.4, "is_playoff": false, "margin": 123.3}, {"year": 2024, "week": 11, "home_owner": "TJ Doody", "away_owner": "Thomas Pluciennik", "home_score": 85.7, "away_score": 198.3, "is_playoff": false, "margin": 112.6}, {"year": 2022, "week": 4, "home_owner": "TJ Doody", "away_owner": "Cornelius Hourihan", "home_score": 175.5, "away_score": 68.6, "is_playoff": false, "margin": 106.9}, {"year": 2020, "week": 9, "home_owner": "Sean Henry", "away_owner": "Matt Howard", "home_score": 150.3, "away_score": 50.3, "is_playoff": false, "margin": 100.0}, {"year": 2021, "week": 5, "home_owner": "Eric Jalbert", "away_owner": "TJ Doody", "home_score": 193.9, "away_score": 97.9, "is_playoff": false, "margin": 96.0}, {"year": 2023, "week": 4, "home_owner": "Andrew Howard", "away_owner": "Robert Pluciennik", "home_score": 195.6, "away_score": 102.9, "is_playoff": false, "margin": 92.7}, {"year": 2022, "week": 1, "home_owner": "Thomas Pluciennik", "away_owner": "TJ Doody", "home_score": 151.9, "away_score": 62.1, "is_playoff": false, "margin": 89.8}, {"year": 2020, "week": 12, "home_owner": "Chad Brodeur", "away_owner": "Robert Pluciennik", "home_score": 107.5, "away_score": 195.4, "is_playoff": false, "margin": 87.9}, {"year": 2021, "week": 10, "home_owner": "TJ Doody", "away_owner": "Thomas Pluciennik", "home_score": 45.5, "away_score": 132.1, "is_playoff": false, "margin": 86.6}, {"year": 2020, "week": 11, "home_owner": "TJ Doody", "away_owner": "Eric Jalbert", "home_score": 54.9, "away_score": 141.4, "is_playoff": false, "margin": 86.5}, {"year": 2022, "week": 9, "home_owner": "Matt Howard", "away_owner": "Robert Pluciennik", "home_score": 77.9, "away_score": 159.9, "is_playoff": false, "margin": 82.0}, {"year": 2019, "week": 3, "home_owner": "Sean Henry", "away_owner": "Robert Pluciennik", "home_score": 105.5, "away_score": 186.9, "is_playoff": false, "margin": 81.4}, {"year": 2022, "week": 9, "home_owner": "Chad Brodeur", "away_owner": "Thomas Pluciennik", "home_score": 167.2, "away_score": 86.0, "is_playoff": false, "margin": 81.2}, {"year": 2022, "week": 7, "home_owner": "Cornelius Hourihan", "away_owner": "Thomas Pluciennik", "home_score": 170.1, "away_score": 93.7, "is_playoff": false, "margin": 76.4}, {"year": 2019, "week": 6, "home_owner": "Chad Brodeur", "away_owner": "Matt Howard", "home_score": 172.8, "away_score": 99.3, "is_playoff": false, "margin": 73.5}], "closest_games": [{"year": 2025, "week": 13, "home_owner": "Andrew Howard", "away_owner": "TJ Doody", "home_score": 75.9, "away_score": 75.9, "is_playoff": false, "margin": 0.0}, {"year": 2020, "week": 4, "home_owner": "Eric Jalbert", "away_owner": "Greg Jalbert", "home_score": 130.0, "away_score": 130.1, "is_playoff": false, "margin": 0.1}, {"year": 2021, "week": 11, "home_owner": "Greg Jalbert", "away_owner": "Cornelius Hourihan", "home_score": 99.9, "away_score": 99.8, "is_playoff": false, "margin": 0.1}, {"year": 2021, "week": 2, "home_owner": "Eric Jalbert", "away_owner": "Chad Brodeur", "home_score": 128.1, "away_score": 127.7, "is_playoff": false, "margin": 0.4}, {"year": 2022, "week": 10, "home_owner": "Eric Jalbert", "away_owner": "Andrew Howard", "home_score": 121.2, "away_score": 121.6, "is_playoff": false, "margin": 0.4}, {"year": 2020, "week": 10, "home_owner": "Chad Brodeur", "away_owner": "Sean Henry", "home_score": 109.9, "away_score": 110.4, "is_playoff": false, "margin": 0.5}, {"year": 2024, "week": 5, "home_owner": "Eric Jalbert", "away_owner": "Andrew Howard", "home_score": 123.9, "away_score": 124.4, "is_playoff": false, "margin": 0.5}, {"year": 2019, "week": 5, "home_owner": "Andrew Howard", "away_owner": "TJ Doody", "home_score": 138.5, "away_score": 137.9, "is_playoff": false, "margin": 0.6}, {"year": 2023, "week": 1, "home_owner": "Greg Jalbert", "away_owner": "Robert Pluciennik", "home_score": 102.1, "away_score": 102.7, "is_playoff": false, "margin": 0.6}, {"year": 2023, "week": 1, "home_owner": "Chad Brodeur", "away_owner": "Sean Henry", "home_score": 98.2, "away_score": 97.6, "is_playoff": false, "margin": 0.6}, {"year": 2024, "week": 4, "home_owner": "Matt Howard", "away_owner": "Cornelius Hourihan", "home_score": 103.6, "away_score": 102.7, "is_playoff": false, "margin": 0.9}, {"year": 2022, "week": 6, "home_owner": "Greg Jalbert", "away_owner": "Sean Henry", "home_score": 101.5, "away_score": 100.5, "is_playoff": false, "margin": 1.0}, {"year": 2022, "week": 11, "home_owner": "Matt Howard", "away_owner": "Andrew Howard", "home_score": 85.2, "away_score": 84.1, "is_playoff": false, "margin": 1.1}, {"year": 2020, "week": 2, "home_owner": "Matt Howard", "away_owner": "Robert Pluciennik", "home_score": 106.6, "away_score": 105.4, "is_playoff": false, "margin": 1.2}, {"year": 2021, "week": 5, "home_owner": "Robert Pluciennik", "away_owner": "Chad Brodeur", "home_score": 142.5, "away_score": 141.2, "is_playoff": false, "margin": 1.3}], "luck": [{"owner": "Eric Jalbert", "actual_wins": 58, "expected_wins": 50.4, "luck_score": 7.6, "weeks": 90, "luck_per_season": 1.09}, {"owner": "Thomas Pluciennik", "actual_wins": 55, "expected_wins": 52.6, "luck_score": 2.4, "weeks": 90, "luck_per_season": 0.35}, {"owner": "Greg Jalbert", "actual_wins": 46, "expected_wins": 44.9, "luck_score": 1.1, "weeks": 90, "luck_per_season": 0.16}, {"owner": "Robert Pluciennik", "actual_wins": 54, "expected_wins": 52.9, "luck_score": 1.1, "weeks": 90, "luck_per_season": 0.16}, {"owner": "Chad Brodeur", "actual_wins": 43, "expected_wins": 42.4, "luck_score": 0.6, "weeks": 90, "luck_per_season": 0.08}, {"owner": "Matt Howard", "actual_wins": 36, "expected_wins": 35.7, "luck_score": 0.3, "weeks": 90, "luck_per_season": 0.05}, {"owner": "Cornelius Hourihan", "actual_wins": 38, "expected_wins": 38.6, "luck_score": -0.6, "weeks": 90, "luck_per_season": -0.08}, {"owner": "Andrew Howard", "actual_wins": 51, "expected_wins": 51.9, "luck_score": -0.9, "weeks": 90, "luck_per_season": -0.13}, {"owner": "TJ Doody", "actual_wins": 33, "expected_wins": 36.7, "luck_score": -3.7, "weeks": 90, "luck_per_season": -0.53}, {"owner": "Sean Henry", "actual_wins": 35, "expected_wins": 44.0, "luck_score": -9.0, "weeks": 90, "luck_per_season": -1.3}], "draft_rankings": [{"owner": "Thomas Pluciennik", "years_with_data": 7, "total_draft_value": 9075.4, "avg_per_season": 1296.5}, {"owner": "Eric Jalbert", "years_with_data": 7, "total_draft_value": 8251.2, "avg_per_season": 1178.7}, {"owner": "Robert Pluciennik", "years_with_data": 7, "total_draft_value": 8137.0, "avg_per_season": 1162.4}, {"owner": "Matt Howard", "years_with_data": 7, "total_draft_value": 7762.8, "avg_per_season": 1109.0}, {"owner": "Cornelius Hourihan", "years_with_data": 7, "total_draft_value": 7730.4, "avg_per_season": 1104.3}, {"owner": "TJ Doody", "years_with_data": 7, "total_draft_value": 7672.3, "avg_per_season": 1096.0}, {"owner": "Chad Brodeur", "years_with_data": 7, "total_draft_value": 7214.5, "avg_per_season": 1030.6}, {"owner": "Andrew Howard", "years_with_data": 7, "total_draft_value": 6997.5, "avg_per_season": 999.6}, {"owner": "Sean Henry", "years_with_data": 7, "total_draft_value": 6582.3, "avg_per_season": 940.3}, {"owner": "Greg Jalbert", "years_with_data": 7, "total_draft_value": 6214.4, "avg_per_season": 887.8}], "standings_matrix": [{"year": 2010, "owner": "Greg Jalbert", "final_standing": 3, "wins": 8, "losses": 5, "pf": 1230.5}, {"year": 2011, "owner": "Greg Jalbert", "final_standing": 3, "wins": 8, "losses": 4, "pf": 1348.6}, {"year": 2012, "owner": "Greg Jalbert", "final_standing": 6, "wins": 4, "losses": 8, "pf": 1178.9}, {"year": 2013, "owner": "Greg Jalbert", "final_standing": 5, "wins": 6, "losses": 6, "pf": 1347.7}, {"year": 2014, "owner": "Greg Jalbert", "final_standing": 4, "wins": 8, "losses": 4, "pf": 1297.3}, {"year": 2015, "owner": "Greg Jalbert", "final_standing": 1, "wins": 9, "losses": 3, "pf": 1376.7}, {"year": 2016, "owner": "Greg Jalbert", "final_standing": 10, "wins": 3, "losses": 9, "pf": 1135.4}, {"year": 2017, "owner": "Greg Jalbert", "final_standing": 6, "wins": 5, "losses": 7, "pf": 1083.6}, {"year": 2018, "owner": "Greg Jalbert", "final_standing": 2, "wins": 7, "losses": 5, "pf": 1727.5}, {"year": 2019, "owner": "Greg Jalbert", "final_standing": 9, "wins": 5, "losses": 8, "pf": 1424.5}, {"year": 2020, "owner": "Greg Jalbert", "final_standing": 3, "wins": 9, "losses": 3, "pf": 1632.0}, {"year": 2021, "owner": "Greg Jalbert", "final_standing": 6, "wins": 7, "losses": 6, "pf": 1699.2}, {"year": 2022, "owner": "Greg Jalbert", "final_standing": 7, "wins": 7, "losses": 6, "pf": 1367.9}, {"year": 2023, "owner": "Greg Jalbert", "final_standing": 5, "wins": 6, "losses": 7, "pf": 1463.9}, {"year": 2024, "owner": "Greg Jalbert", "final_standing": 1, "wins": 8, "losses": 5, "pf": 1523.9}, {"year": 2025, "owner": "Greg Jalbert", "final_standing": 9, "wins": 4, "losses": 9, "pf": 1471.4}, {"year": 2010, "owner": "Andrew Howard", "final_standing": 1, "wins": 8, "losses": 5, "pf": 1224.8}, {"year": 2011, "owner": "Andrew Howard", "final_standing": 1, "wins": 7, "losses": 5, "pf": 1318.9}, {"year": 2012, "owner": "Andrew Howard", "final_standing": 5, "wins": 6, "losses": 6, "pf": 1277.5}, {"year": 2013, "owner": "Andrew Howard", "final_standing": 1, "wins": 8, "losses": 4, "pf": 1415.5}, {"year": 2014, "owner": "Andrew Howard", "final_standing": 2, "wins": 8, "losses": 4, "pf": 1368.9}, {"year": 2015, "owner": "Andrew Howard", "final_standing": 9, "wins": 5, "losses": 7, "pf": 1192.0}, {"year": 2016, "owner": "Andrew Howard", "final_standing": 8, "wins": 6, "losses": 6, "pf": 1054.5}, {"year": 2017, "owner": "Andrew Howard", "final_standing": 3, "wins": 9, "losses": 3, "pf": 1158.3}, {"year": 2018, "owner": "Andrew Howard", "final_standing": 3, "wins": 9, "losses": 3, "pf": 1495.2}, {"year": 2019, "owner": "Andrew Howard", "final_standing": 3, "wins": 10, "losses": 3, "pf": 2000.5}, {"year": 2020, "owner": "Andrew Howard", "final_standing": 2, "wins": 8, "losses": 4, "pf": 1626.8}, {"year": 2021, "owner": "Andrew Howard", "final_standing": 3, "wins": 7, "losses": 6, "pf": 1793.2}, {"year": 2022, "owner": "Andrew Howard", "final_standing": 8, "wins": 4, "losses": 9, "pf": 1354.5}, {"year": 2023, "owner": "Andrew Howard", "final_standing": 4, "wins": 7, "losses": 6, "pf": 1525.3}, {"year": 2024, "owner": "Andrew Howard", "final_standing": 2, "wins": 9, "losses": 4, "pf": 1582.9}, {"year": 2025, "owner": "Andrew Howard", "final_standing": 7, "wins": 6, "losses": 6, "pf": 1409.0}, {"year": 2010, "owner": "Cornelius Hourihan", "final_standing": 10, "wins": 5, "losses": 8, "pf": 1255.6}, {"year": 2011, "owner": "Cornelius Hourihan", "final_standing": 6, "wins": 5, "losses": 7, "pf": 1093.9}, {"year": 2012, "owner": "Cornelius Hourihan", "final_standing": 7, "wins": 5, "losses": 7, "pf": 1260.0}, {"year": 2013, "owner": "Cornelius Hourihan", "final_standing": 9, "wins": 2, "losses": 10, "pf": 1082.0}, {"year": 2014, "owner": "Cornelius Hourihan", "final_standing": 3, "wins": 7, "losses": 5, "pf": 1298.9}, {"year": 2015, "owner": "Cornelius Hourihan", "final_standing": 5, "wins": 5, "losses": 7, "pf": 1255.8}, {"year": 2016, "owner": "Cornelius Hourihan", "final_standing": 9, "wins": 5, "losses": 7, "pf": 1112.4}, {"year": 2017, "owner": "Cornelius Hourihan", "final_standing": 2, "wins": 8, "losses": 4, "pf": 1278.1}, {"year": 2018, "owner": "Cornelius Hourihan", "final_standing": 10, "wins": 3, "losses": 9, "pf": 1394.1}, {"year": 2019, "owner": "Cornelius Hourihan", "final_standing": 6, "wins": 6, "losses": 7, "pf": 1461.9}, {"year": 2020, "owner": "Cornelius Hourihan", "final_standing": 8, "wins": 6, "losses": 6, "pf": 1614.9}, {"year": 2021, "owner": "Cornelius Hourihan", "final_standing": 7, "wins": 3, "losses": 10, "pf": 1489.9}, {"year": 2022, "owner": "Cornelius Hourihan", "final_standing": 4, "wins": 8, "losses": 5, "pf": 1438.5}, {"year": 2023, "owner": "Cornelius Hourihan", "final_standing": 8, "wins": 4, "losses": 9, "pf": 1399.2}, {"year": 2024, "owner": "Cornelius Hourihan", "final_standing": 8, "wins": 4, "losses": 9, "pf": 1321.4}, {"year": 2025, "owner": "Cornelius Hourihan", "final_standing": 1, "wins": 7, "losses": 6, "pf": 1458.4}, {"year": 2010, "owner": "Thomas Pluciennik", "final_standing": 7, "wins": 7, "losses": 6, "pf": 1277.6}, {"year": 2011, "owner": "Thomas Pluciennik", "final_standing": 10, "wins": 4, "losses": 8, "pf": 1113.9}, {"year": 2012, "owner": "Thomas Pluciennik", "final_standing": 9, "wins": 5, "losses": 7, "pf": 1120.9}, {"year": 2013, "owner": "Thomas Pluciennik", "final_standing": 2, "wins": 10, "losses": 2, "pf": 1315.2}, {"year": 2014, "owner": "Thomas Pluciennik", "final_standing": 1, "wins": 8, "losses": 4, "pf": 1274.3}, {"year": 2015, "owner": "Thomas Pluciennik", "final_standing": 4, "wins": 6, "losses": 6, "pf": 1271.8}, {"year": 2016, "owner": "Thomas Pluciennik", "final_standing": 3, "wins": 6, "losses": 6, "pf": 1317.0}, {"year": 2017, "owner": "Thomas Pluciennik", "final_standing": 5, "wins": 7, "losses": 5, "pf": 1168.3}, {"year": 2018, "owner": "Thomas Pluciennik", "final_standing": 4, "wins": 7, "losses": 4, "pf": 1697.7}, {"year": 2019, "owner": "Thomas Pluciennik", "final_standing": 5, "wins": 8, "losses": 5, "pf": 1690.9}, {"year": 2020, "owner": "Thomas Pluciennik", "final_standing": 4, "wins": 8, "losses": 4, "pf": 1524.0}, {"year": 2021, "owner": "Thomas Pluciennik", "final_standing": 4, "wins": 8, "losses": 5, "pf": 1731.3}, {"year": 2022, "owner": "Thomas Pluciennik", "final_standing": 5, "wins": 4, "losses": 9, "pf": 1442.8}, {"year": 2023, "owner": "Thomas Pluciennik", "final_standing": 1, "wins": 9, "losses": 4, "pf": 1606.2}, {"year": 2024, "owner": "Thomas Pluciennik", "final_standing": 3, "wins": 8, "losses": 5, "pf": 1648.9}, {"year": 2025, "owner": "Thomas Pluciennik", "final_standing": 4, "wins": 10, "losses": 3, "pf": 1537.1}, {"year": 2010, "owner": "Eric Jalbert", "final_standing": 4, "wins": 10, "losses": 3, "pf": 1339.4}, {"year": 2011, "owner": "Eric Jalbert", "final_standing": 8, "wins": 5, "losses": 7, "pf": 1092.6}, {"year": 2012, "owner": "Eric Jalbert", "final_standing": 10, "wins": 4, "losses": 8, "pf": 1094.5}, {"year": 2013, "owner": "Eric Jalbert", "final_standing": 3, "wins": 8, "losses": 4, "pf": 1249.8}, {"year": 2014, "owner": "Eric Jalbert", "final_standing": 6, "wins": 6, "losses": 6, "pf": 1094.6}, {"year": 2015, "owner": "Eric Jalbert", "final_standing": 2, "wins": 8, "losses": 4, "pf": 1383.6}, {"year": 2016, "owner": "Eric Jalbert", "final_standing": 4, "wins": 9, "losses": 3, "pf": 1312.8}, {"year": 2017, "owner": "Eric Jalbert", "final_standing": 10, "wins": 3, "losses": 9, "pf": 1105.3}, {"year": 2018, "owner": "Eric Jalbert", "final_standing": 1, "wins": 7, "losses": 4, "pf": 1599.6}, {"year": 2019, "owner": "Eric Jalbert", "final_standing": 2, "wins": 10, "losses": 3, "pf": 1771.4}, {"year": 2020, "owner": "Eric Jalbert", "final_standing": 5, "wins": 7, "losses": 5, "pf": 1533.5}, {"year": 2021, "owner": "Eric Jalbert", "final_standing": 2, "wins": 11, "losses": 2, "pf": 1774.3}, {"year": 2022, "owner": "Eric Jalbert", "final_standing": 3, "wins": 8, "losses": 5, "pf": 1664.8}, {"year": 2023, "owner": "Eric Jalbert", "final_standing": 2, "wins": 10, "losses": 3, "pf": 1605.4}, {"year": 2024, "owner": "Eric Jalbert", "final_standing": 5, "wins": 5, "losses": 8, "pf": 1356.1}, {"year": 2025, "owner": "Eric Jalbert", "final_standing": 6, "wins": 7, "losses": 6, "pf": 1343.3}, {"year": 2010, "owner": "Robert Pluciennik", "final_standing": 6, "wins": 5, "losses": 8, "pf": 1202.7}, {"year": 2011, "owner": "Robert Pluciennik", "final_standing": 4, "wins": 8, "losses": 3, "pf": 1318.9}, {"year": 2012, "owner": "Robert Pluciennik", "final_standing": 8, "wins": 4, "losses": 8, "pf": 1039.8}, {"year": 2013, "owner": "Robert Pluciennik", "final_standing": 7, "wins": 6, "losses": 6, "pf": 1216.7}, {"year": 2014, "owner": "Robert Pluciennik", "final_standing": 10, "wins": 4, "losses": 8, "pf": 1195.4}, {"year": 2015, "owner": "Robert Pluciennik", "final_standing": 10, "wins": 5, "losses": 7, "pf": 1197.0}, {"year": 2016, "owner": "Robert Pluciennik", "final_standing": 7, "wins": 4, "losses": 8, "pf": 1117.3}, {"year": 2017, "owner": "Robert Pluciennik", "final_standing": 4, "wins": 8, "losses": 4, "pf": 1206.2}, {"year": 2018, "owner": "Robert Pluciennik", "final_standing": 9, "wins": 6, "losses": 6, "pf": 1608.2}, {"year": 2019, "owner": "Robert Pluciennik", "final_standing": 4, "wins": 9, "losses": 4, "pf": 1740.8}, {"year": 2020, "owner": "Robert Pluciennik", "final_standing": 6, "wins": 6, "losses": 6, "pf": 1465.9}, {"year": 2021, "owner": "Robert Pluciennik", "final_standing": 1, "wins": 8, "losses": 5, "pf": 1635.4}, {"year": 2022, "owner": "Robert Pluciennik", "final_standing": 2, "wins": 10, "losses": 3, "pf": 1634.6}, {"year": 2023, "owner": "Robert Pluciennik", "final_standing": 3, "wins": 7, "losses": 6, "pf": 1591.9}, {"year": 2024, "owner": "Robert Pluciennik", "final_standing": 4, "wins": 9, "losses": 4, "pf": 1727.7}, {"year": 2025, "owner": "Robert Pluciennik", "final_standing": 5, "wins": 5, "losses": 8, "pf": 1395.1}, {"year": 2010, "owner": "Matt Howard", "final_standing": 9, "wins": 3, "losses": 10, "pf": 1194.0}, {"year": 2011, "owner": "Matt Howard", "final_standing": 2, "wins": 6, "losses": 5, "pf": 1174.1}, {"year": 2012, "owner": "Matt Howard", "final_standing": 1, "wins": 9, "losses": 3, "pf": 1323.4}, {"year": 2013, "owner": "Matt Howard", "final_standing": 8, "wins": 2, "losses": 10, "pf": 1025.4}, {"year": 2014, "owner": "Matt Howard", "final_standing": 7, "wins": 7, "losses": 5, "pf": 1153.6}, {"year": 2015, "owner": "Matt Howard", "final_standing": 6, "wins": 6, "losses": 6, "pf": 1237.7}, {"year": 2016, "owner": "Matt Howard", "final_standing": 2, "wins": 8, "losses": 4, "pf": 1285.7}, {"year": 2017, "owner": "Matt Howard", "final_standing": 8, "wins": 2, "losses": 10, "pf": 924.4}, {"year": 2018, "owner": "Matt Howard", "final_standing": 8, "wins": 7, "losses": 5, "pf": 1550.8}, {"year": 2019, "owner": "Matt Howard", "final_standing": 7, "wins": 5, "losses": 8, "pf": 1516.8}, {"year": 2020, "owner": "Matt Howard", "final_standing": 7, "wins": 3, "losses": 9, "pf": 1361.9}, {"year": 2021, "owner": "Matt Howard", "final_standing": 5, "wins": 6, "losses": 7, "pf": 1564.7}, {"year": 2022, "owner": "Matt Howard", "final_standing": 1, "wins": 8, "losses": 5, "pf": 1466.0}, {"year": 2023, "owner": "Matt Howard", "final_standing": 10, "wins": 5, "losses": 8, "pf": 1292.4}, {"year": 2024, "owner": "Matt Howard", "final_standing": 10, "wins": 4, "losses": 9, "pf": 1267.0}, {"year": 2025, "owner": "Matt Howard", "final_standing": 10, "wins": 5, "losses": 8, "pf": 1341.2}, {"year": 2010, "owner": "Chad Brodeur", "final_standing": 5, "wins": 7, "losses": 6, "pf": 1419.8}, {"year": 2011, "owner": "Chad Brodeur", "final_standing": 5, "wins": 6, "losses": 6, "pf": 1337.4}, {"year": 2012, "owner": "Chad Brodeur", "final_standing": 2, "wins": 8, "losses": 4, "pf": 1193.5}, {"year": 2013, "owner": "Chad Brodeur", "final_standing": 10, "wins": 5, "losses": 7, "pf": 1149.4}, {"year": 2014, "owner": "Chad Brodeur", "final_standing": 9, "wins": 4, "losses": 8, "pf": 1197.7}, {"year": 2015, "owner": "Chad Brodeur", "final_standing": 8, "wins": 6, "losses": 6, "pf": 1038.6}, {"year": 2016, "owner": "Chad Brodeur", "final_standing": 1, "wins": 10, "losses": 2, "pf": 1339.8}, {"year": 2017, "owner": "Chad Brodeur", "final_standing": 1, "wins": 11, "losses": 1, "pf": 1430.9}, {"year": 2018, "owner": "Chad Brodeur", "final_standing": 5, "wins": 7, "losses": 5, "pf": 1612.1}, {"year": 2019, "owner": "Chad Brodeur", "final_standing": 1, "wins": 7, "losses": 6, "pf": 1669.4}, {"year": 2020, "owner": "Chad Brodeur", "final_standing": 10, "wins": 4, "losses": 8, "pf": 1455.8}, {"year": 2021, "owner": "Chad Brodeur", "final_standing": 9, "wins": 6, "losses": 7, "pf": 1641.7}, {"year": 2022, "owner": "Chad Brodeur", "final_standing": 10, "wins": 4, "losses": 9, "pf": 1359.4}, {"year": 2023, "owner": "Chad Brodeur", "final_standing": 7, "wins": 7, "losses": 6, "pf": 1415.4}, {"year": 2024, "owner": "Chad Brodeur", "final_standing": 7, "wins": 7, "losses": 6, "pf": 1330.4}, {"year": 2025, "owner": "Chad Brodeur", "final_standing": 2, "wins": 8, "losses": 5, "pf": 1523.9}, {"year": 2010, "owner": "Sean Henry", "final_standing": 2, "wins": 8, "losses": 5, "pf": 1306.3}, {"year": 2011, "owner": "Sean Henry", "final_standing": 9, "wins": 5, "losses": 7, "pf": 1133.5}, {"year": 2012, "owner": "Sean Henry", "final_standing": 3, "wins": 8, "losses": 4, "pf": 1288.3}, {"year": 2013, "owner": "Sean Henry", "final_standing": 6, "wins": 6, "losses": 6, "pf": 1185.2}, {"year": 2014, "owner": "Sean Henry", "final_standing": 8, "wins": 3, "losses": 9, "pf": 1067.1}, {"year": 2015, "owner": "Sean Henry", "final_standing": 3, "wins": 7, "losses": 5, "pf": 1232.9}, {"year": 2016, "owner": "Sean Henry", "final_standing": 5, "wins": 5, "losses": 7, "pf": 1239.1}, {"year": 2017, "owner": "Sean Henry", "final_standing": 7, "wins": 7, "losses": 5, "pf": 1121.0}, {"year": 2018, "owner": "Sean Henry", "final_standing": 6, "wins": 4, "losses": 8, "pf": 1467.9}, {"year": 2019, "owner": "Sean Henry", "final_standing": 10, "wins": 4, "losses": 9, "pf": 1519.2}, {"year": 2020, "owner": "Sean Henry", "final_standing": 1, "wins": 7, "losses": 5, "pf": 1575.3}, {"year": 2021, "owner": "Sean Henry", "final_standing": 10, "wins": 2, "losses": 11, "pf": 1367.3}, {"year": 2022, "owner": "Sean Henry", "final_standing": 6, "wins": 7, "losses": 6, "pf": 1535.6}, {"year": 2023, "owner": "Sean Henry", "final_standing": 9, "wins": 5, "losses": 8, "pf": 1403.3}, {"year": 2024, "owner": "Sean Henry", "final_standing": 6, "wins": 6, "losses": 7, "pf": 1545.8}, {"year": 2025, "owner": "Sean Henry", "final_standing": 8, "wins": 4, "losses": 9, "pf": 1468.6}, {"year": 2010, "owner": "TJ Doody", "final_standing": 8, "wins": 4, "losses": 9, "pf": 1180.8}, {"year": 2011, "owner": "TJ Doody", "final_standing": 7, "wins": 5, "losses": 7, "pf": 1296.3}, {"year": 2012, "owner": "TJ Doody", "final_standing": 4, "wins": 7, "losses": 5, "pf": 1288.4}, {"year": 2013, "owner": "TJ Doody", "final_standing": 4, "wins": 7, "losses": 5, "pf": 1286.5}, {"year": 2014, "owner": "TJ Doody", "final_standing": 5, "wins": 5, "losses": 7, "pf": 1227.3}, {"year": 2015, "owner": "TJ Doody", "final_standing": 7, "wins": 3, "losses": 9, "pf": 1134.0}, {"year": 2016, "owner": "TJ Doody", "final_standing": 6, "wins": 4, "losses": 8, "pf": 1213.9}, {"year": 2017, "owner": "TJ Doody", "final_standing": 9, "wins": 0, "losses": 12, "pf": 929.1}, {"year": 2018, "owner": "TJ Doody", "final_standing": 7, "wins": 2, "losses": 10, "pf": 1459.6}, {"year": 2019, "owner": "TJ Doody", "final_standing": 8, "wins": 1, "losses": 12, "pf": 1380.2}, {"year": 2020, "owner": "TJ Doody", "final_standing": 9, "wins": 2, "losses": 10, "pf": 1297.7}, {"year": 2021, "owner": "TJ Doody", "final_standing": 8, "wins": 7, "losses": 6, "pf": 1459.8}, {"year": 2022, "owner": "TJ Doody", "final_standing": 9, "wins": 5, "losses": 8, "pf": 1404.2}, {"year": 2023, "owner": "TJ Doody", "final_standing": 6, "wins": 5, "losses": 8, "pf": 1459.9}, {"year": 2024, "owner": "TJ Doody", "final_standing": 9, "wins": 5, "losses": 8, "pf": 1390.8}, {"year": 2025, "owner": "TJ Doody", "final_standing": 3, "wins": 8, "losses": 4, "pf": 1514.6}], "all_owners": ["Andrew Howard", "Chad Brodeur", "Thomas Pluciennik", "Greg Jalbert", "Matt Howard", "Eric Jalbert", "Robert Pluciennik", "Sean Henry", "Cornelius Hourihan", "TJ Doody"]};
+
+const POS_PALETTE = ['#f5d547','#ff4e64','#5fa8ff','#6ed47a','#ff8c5a','#b1b6c2','#cd7f32','#bc5cff','#5cf0d4','#ffd166'];
+const ownerColor = {};
+DATA.all_owners.forEach((o,i) => ownerColor[o] = POS_PALETTE[i % POS_PALETTE.length]);
+
+function fmtNum(n, dp=1) { return n != null ? n.toFixed(dp) : '—'; }
+function pct(n) { return (n*100).toFixed(1) + '%'; }
+
+// ============ Theme system ============
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+const charts = {};
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.theme === theme));
+  // After theme change, redraw all charts with new colors
+  setTimeout(() => {
+    Object.values(charts).forEach(c => { if (c) c.destroy(); });
+    Object.keys(charts).forEach(k => delete charts[k]);
+    rebuildAllCharts();
+  }, 30);
+}
+document.querySelectorAll('.theme-swatch').forEach(s => {
+  s.addEventListener('click', () => setTheme(s.dataset.theme));
+});
+
+// ============ Header stats ============
+document.getElementById('hs-seasons').textContent = DATA.total_seasons;
+document.getElementById('hs-matchups').textContent = DATA.total_matchups;
+document.getElementById('hs-owners').textContent = DATA.career.length;
+
+// ============ Tabs ============
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector(`.tab-panel[data-panel="${t.dataset.tab}"]`).classList.add('active');
+    setTimeout(() => Object.values(charts).forEach(c => c && c.resize()), 50);
+  });
+});
+
+// ============ Career standings table ============
+let careerSort = { key: 'champ_winpct', dir: -1 };
+function buildCareer() {
+  const tbody = document.querySelector('#careerTable tbody');
+  let rows = DATA.career.map(c => ({
+    ...c,
+    record: `${c.total_wins}-${c.total_losses}${c.total_ties ? '-'+c.total_ties : ''}`,
+    diff: +(c.ppg - c.papg).toFixed(2),
+    champCount: c.championships.length,
+    playoffCount: c.playoff_appearances.length,
+  }));
+  const k = careerSort.key;
+  rows.sort((a,b) => {
+    if (k === 'champ_winpct') return (b.champCount - a.champCount) || (b.win_pct - a.win_pct);
+    if (k === 'owner') return a.owner.localeCompare(b.owner) * careerSort.dir;
+    if (k === 'record') return ((b.total_wins) - (a.total_wins)) * careerSort.dir;
+    if (k === 'championships') return (b.champCount - a.champCount) * careerSort.dir;
+    if (k === 'playoff_pct') return (b.playoff_pct - a.playoff_pct) * careerSort.dir;
+    return ((b[k] || 0) - (a[k] || 0)) * careerSort.dir;
+  });
+  tbody.innerHTML = rows.map((r, i) => {
+    const lastTeam = r.team_names[r.team_names.length - 1] || '';
+    const cls = i < 3 ? `row-${i+1}` : '';
+    return `<tr class="${cls}">
+      <td class="r" style="font-family: 'Bebas Neue'; font-size: 18px; color: var(--ink-3);">${i+1}</td>
+      <td><div class="owner-name">${r.owner}<span class="last-team">↳ ${lastTeam}</span></div></td>
+      <td class="r">${r.seasons_played}</td>
+      <td class="r">${r.record}</td>
+      <td class="r">${pct(r.win_pct)}</td>
+      <td class="r"><span class="chips">${r.champCount > 0 ? '🏆'.repeat(r.champCount) : '—'}</span></td>
+      <td class="r">${r.playoffCount}/${r.seasons_played} (${pct(r.playoff_pct)})</td>
+      <td class="r">${fmtNum(r.ppg)}</td>
+      <td class="r">${fmtNum(r.papg)}</td>
+      <td class="r" style="color: ${r.diff > 0 ? 'var(--green)' : r.diff < 0 ? 'var(--hot)' : 'var(--ink-3)'};">${r.diff > 0 ? '+' : ''}${fmtNum(r.diff, 2)}</td>
+    </tr>`;
+  }).join('');
+}
+document.querySelectorAll('#careerTable thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    if (!k || k === 'rank') return;
+    if (careerSort.key === k) careerSort.dir *= -1;
+    else { careerSort.key = k; careerSort.dir = -1; }
+    buildCareer();
+  });
+});
+
+// ============ Owner cards ============
+function buildOwnerCards() {
+  const grid = document.getElementById('ownerGrid');
+  const sorted = [...DATA.career];
+  grid.innerHTML = sorted.map((c, i) => {
+    const lastTeam = c.team_names[c.team_names.length - 1] || '';
+    const trophies = [];
+    c.championships.forEach(y => trophies.push(`<span class="trophy">🏆 ${y}</span>`));
+    c.runner_ups.forEach(y => trophies.push(`<span class="trophy silver">2nd ${y}</span>`));
+    c.third_place.forEach(y => trophies.push(`<span class="trophy bronze">3rd ${y}</span>`));
+    c.last_place.forEach(y => trophies.push(`<span class="trophy toilet">💩 ${y}</span>`));
+    return `<div class="owner-card">
+      <div class="rank">RANK ${i+1}</div>
+      <div class="name">${c.owner}</div>
+      <div class="last-team">"${lastTeam}"</div>
+      <div class="stat-row"><span class="lbl">Career</span><span class="val">${c.total_wins}-${c.total_losses} (${pct(c.win_pct)})</span></div>
+      <div class="stat-row"><span class="lbl">Avg Pts/G</span><span class="val">${fmtNum(c.ppg)}</span></div>
+      <div class="stat-row"><span class="lbl">Best Year</span><span class="val">${c.best_season ? c.best_season.year + ' (' + fmtNum(c.best_season.pf, 0) + ' pts)' : '—'}</span></div>
+      <div class="trophy-row">${trophies.length ? trophies.join('') : '<span style="color:var(--ink-3); font-size: 11px;">No hardware yet</span>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============ Standings Heatmap ============
+// Color scale based on final standing (1 = best, 10 = worst)
+function standingColor(rank) {
+  if (rank == null) return 'transparent';
+  // Green for top, transitions to red for bottom
+  const colors = {
+    1: '#1a8c3c',
+    2: '#3aa454',
+    3: '#5dba6a',
+    4: '#90c87a',
+    5: '#c0d188',
+    6: '#dac98a',
+    7: '#e8b070',
+    8: '#e89a64',
+    9: '#c45a4a',
+    10: '#8a2424',
+  };
+  return colors[rank] || '#444';
+}
+function buildStandingsHeatmap() {
+  const tbl = document.getElementById('standingsHeatmap');
+  const years = [];
+  for (let y = DATA.year_range[0]; y <= DATA.year_range[1]; y++) years.push(y);
+
+  let html = '<thead><tr><th></th>';
+  years.forEach(y => { html += `<th>${y}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  // Use career order
+  DATA.career.forEach(c => {
+    html += `<tr><th>${c.owner}</th>`;
+    const standingByYear = {};
+    c.season_history.forEach(s => standingByYear[s.year] = s.final_standing);
+    years.forEach(y => {
+      const rank = standingByYear[y];
+      const bg = standingColor(rank);
+      const text = rank ? rank : '—';
+      const tt = rank ? `${c.owner} · ${y} · ${getOrdinal(rank)} place` : `${c.owner} · ${y} · no data`;
+      html += `<td style="background:${bg}" title="${tt}">${text}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+
+function getOrdinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+
+// ============ Win % Heatmap ============
+function winpctColor(p) {
+  if (p == null) return 'transparent';
+  // Blue gradient: low = pale, high = saturated
+  if (p < 0.20) return '#3a1a1a';
+  if (p < 0.30) return '#5a2a2a';
+  if (p < 0.40) return '#8a4a3a';
+  if (p < 0.50) return '#a5805a';
+  if (p < 0.55) return '#7a8a8a';
+  if (p < 0.60) return '#5a8aa5';
+  if (p < 0.65) return '#3a72a5';
+  if (p < 0.70) return '#2a5aa5';
+  if (p < 0.80) return '#1a4090';
+  return '#0a2a70';
+}
+function buildWinPctHeatmap() {
+  const tbl = document.getElementById('winpctHeatmap');
+  const years = [];
+  for (let y = DATA.year_range[0]; y <= DATA.year_range[1]; y++) years.push(y);
+
+  let html = '<thead><tr><th></th>';
+  years.forEach(y => { html += `<th>${y}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  DATA.career.forEach(c => {
+    html += `<tr><th>${c.owner}</th>`;
+    const wpByYear = {};
+    c.win_pct_by_year.forEach(s => wpByYear[s.year] = s.win_pct);
+    years.forEach(y => {
+      const wp = wpByYear[y];
+      if (wp == null) {
+        html += `<td class="empty">—</td>`;
+      } else {
+        const bg = winpctColor(wp);
+        const txt = (wp * 100).toFixed(0) + '%';
+        const tt = `${c.owner} · ${y} · Win% ${(wp*100).toFixed(1)}%`;
+        const textColor = wp >= 0.45 ? '#fff' : '#fff';
+        html += `<td style="background:${bg};color:${textColor};" title="${tt}">${txt}</td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+
+// ============ Helper: Common chart options ============
+function commonChartOpts() {
+  const inkColor = getCSSVar('--canvas-text');
+  const inkSecondary = getCSSVar('--ink-3');
+  const gridColor = getCSSVar('--grid-line');
+  const tooltipBg = getCSSVar('--bg-2');
+  return { inkColor, inkSecondary, gridColor, tooltipBg };
+}
+
+// ============ PPG chart (with bar/line toggle) ============
+let ppgType = 'bar';
+function buildPPG() {
+  const ctx = document.getElementById('chartPPG').getContext('2d');
+  const sorted = [...DATA.career].sort((a,b) => b.ppg - a.ppg);
+  const { inkColor, inkSecondary, gridColor, tooltipBg } = commonChartOpts();
+
+  const config = {
+    type: ppgType === 'bar' ? 'bar' : 'line',
+    data: {
+      labels: sorted.map(c => c.owner),
+      datasets: [{
+        label: 'PPG',
+        data: sorted.map(c => c.ppg),
+        backgroundColor: ppgType === 'bar' ? sorted.map(c => ownerColor[c.owner]) : 'rgba(245,213,71,0.15)',
+        borderColor: ppgType === 'bar' ? sorted.map(c => ownerColor[c.owner]) : '#f5d547',
+        borderRadius: 2,
+        barThickness: 18,
+        borderWidth: ppgType === 'line' ? 2.5 : 0,
+        tension: 0.3,
+        pointRadius: ppgType === 'line' ? 6 : 0,
+        pointBackgroundColor: sorted.map(c => ownerColor[c.owner]),
+        pointBorderColor: sorted.map(c => ownerColor[c.owner]),
+        fill: ppgType === 'line',
+      }]
+    },
+    options: {
+      indexAxis: ppgType === 'bar' ? 'y' : 'x',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: tooltipBg, titleColor: inkColor, bodyColor: inkSecondary,
+          borderColor: gridColor, borderWidth: 1, padding: 10,
+          callbacks: { label: (c) => `${(ppgType === 'bar' ? c.parsed.x : c.parsed.y).toFixed(1)} PPG` }
+        }
+      },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: inkSecondary, maxRotation: ppgType === 'line' ? 45 : 0, minRotation: ppgType === 'line' ? 45 : 0 }, border: { display: false }, beginAtZero: ppgType === 'line', min: ppgType === 'bar' ? 100 : undefined },
+        y: { grid: { color: gridColor }, ticks: { color: inkColor, font: { weight: 600 } }, border: { display: false }, beginAtZero: ppgType === 'line' ? false : undefined, min: ppgType === 'line' ? 100 : undefined }
+      }
+    }
+  };
+  charts.ppg = new Chart(ctx, config);
+}
+
+// ============ Win% Ranked chart ============
+let winpctType = 'bar';
+function buildWinPctRanked() {
+  const ctx = document.getElementById('chartWinPctRanked').getContext('2d');
+  const sorted = [...DATA.career].sort((a,b) => b.win_pct - a.win_pct);
+  const { inkColor, inkSecondary, gridColor, tooltipBg } = commonChartOpts();
+
+  charts.winpct = new Chart(ctx, {
+    type: winpctType === 'bar' ? 'bar' : 'line',
+    data: {
+      labels: sorted.map(c => c.owner),
+      datasets: [{
+        label: 'Win %',
+        data: sorted.map(c => c.win_pct),
+        backgroundColor: winpctType === 'bar' ? sorted.map(c => ownerColor[c.owner]) : 'rgba(95,168,255,0.15)',
+        borderColor: winpctType === 'bar' ? sorted.map(c => ownerColor[c.owner]) : '#5fa8ff',
+        borderRadius: 2,
+        barThickness: 18,
+        borderWidth: winpctType === 'line' ? 2.5 : 0,
+        tension: 0.3,
+        pointRadius: winpctType === 'line' ? 6 : 0,
+        pointBackgroundColor: sorted.map(c => ownerColor[c.owner]),
+        pointBorderColor: sorted.map(c => ownerColor[c.owner]),
+        fill: winpctType === 'line',
+      }]
+    },
+    options: {
+      indexAxis: winpctType === 'bar' ? 'y' : 'x',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: tooltipBg, titleColor: inkColor, bodyColor: inkSecondary,
+          borderColor: gridColor, borderWidth: 1, padding: 10,
+          callbacks: { label: (c) => `${((winpctType === 'bar' ? c.parsed.x : c.parsed.y) * 100).toFixed(1)}%` }
+        }
+      },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: inkSecondary, callback: (v) => winpctType === 'bar' ? (v*100).toFixed(0)+'%' : v, maxRotation: winpctType === 'line' ? 45 : 0, minRotation: winpctType === 'line' ? 45 : 0 }, border: { display: false } },
+        y: { grid: { color: gridColor }, ticks: { color: inkColor, font: { weight: 600 }, callback: (v) => winpctType === 'line' ? (v*100).toFixed(0)+'%' : v }, border: { display: false } }
+      }
+    }
+  });
+}
+
+// ============ Records lists ============
+function buildRecordsList(elId, items, mapper) {
+  document.getElementById(elId).innerHTML = items.map((it, i) => mapper(it, i)).join('');
+}
+function renderRecordsLists() {
+  buildRecordsList('highScoresList', DATA.highest_scores, (it, i) => `
+    <div class="record-row">
+      <div class="num">${i+1}</div>
+      <div class="desc"><strong>${it.owner}</strong><br><span class="meta">${it.year} · Week ${it.week} · vs ${it.opponent} (${fmtNum(it.opp_score)})</span></div>
+      <div class="val">${fmtNum(it.score)}</div>
+    </div>`);
+
+  buildRecordsList('lowScoresList', DATA.lowest_scores, (it, i) => `
+    <div class="record-row">
+      <div class="num">${i+1}</div>
+      <div class="desc"><strong>${it.owner}</strong><br><span class="meta">${it.year} · Week ${it.week} · vs ${it.opponent} (${fmtNum(it.opp_score)}) · ${it.result}</span></div>
+      <div class="val cold">${fmtNum(it.score)}</div>
+    </div>`);
+
+  buildRecordsList('blowoutsList', DATA.biggest_blowouts, (it, i) => {
+    const winner = it.home_score > it.away_score ? it.home_owner : it.away_owner;
+    const loser = it.home_score > it.away_score ? it.away_owner : it.home_owner;
+    const wScore = Math.max(it.home_score, it.away_score);
+    const lScore = Math.min(it.home_score, it.away_score);
+    return `<div class="record-row">
+      <div class="num">${i+1}</div>
+      <div class="desc"><strong>${winner}</strong> ${fmtNum(wScore)} – ${fmtNum(lScore)} ${loser}<br><span class="meta">${it.year} · Week ${it.week}</span></div>
+      <div class="val hot">+${fmtNum(it.margin)}</div>
+    </div>`;
+  });
+
+  buildRecordsList('closeGamesList', DATA.closest_games, (it, i) => {
+    const winner = it.home_score > it.away_score ? it.home_owner : (it.home_score < it.away_score ? it.away_owner : 'TIE');
+    const loser = it.home_score > it.away_score ? it.away_owner : it.home_owner;
+    return `<div class="record-row">
+      <div class="num">${i+1}</div>
+      <div class="desc"><strong>${winner}</strong> ${fmtNum(Math.max(it.home_score, it.away_score))} – ${fmtNum(Math.min(it.home_score, it.away_score))} ${winner === 'TIE' ? '' : loser}<br><span class="meta">${it.year} · Week ${it.week}</span></div>
+      <div class="val">${fmtNum(it.margin)}</div>
+    </div>`;
+  });
+}
+
+// ============ H2H matrix ============
+function buildH2H() {
+  const owners = DATA.all_owners;
+  const tbl = document.getElementById('h2hTable');
+  let html = '<thead><tr><th class="row-name"></th>';
+  owners.forEach(o => { html += `<th title="${o}">${o.split(' ').map(w => w[0]).join('')}</th>`; });
+  html += '</tr></thead><tbody>';
+  owners.forEach(rowOwner => {
+    html += `<tr><th class="row-name">${rowOwner}</th>`;
+    owners.forEach(colOwner => {
+      if (rowOwner === colOwner) {
+        html += `<td class="diag">—</td>`;
+      } else {
+        const rec = DATA.h2h[rowOwner] && DATA.h2h[rowOwner][colOwner];
+        if (!rec || !rec.games) {
+          html += `<td class="even">—</td>`;
+        } else {
+          const w = rec.wins, l = rec.losses, t = rec.ties || 0;
+          const wp = (w + 0.5*t) / rec.games;
+          const cls = wp > 0.55 ? 'win' : wp < 0.45 ? 'loss' : 'even';
+          const avg = ((rec.pf - rec.pa) / rec.games).toFixed(1);
+          html += `<td class="${cls}" title="${rowOwner} vs ${colOwner}: ${w}-${l}${t?'-'+t:''} | Avg margin: ${avg > 0 ? '+' : ''}${avg}">
+            <div class="rec">${w}-${l}${t?'-'+t:''}</div>
+            <div class="pct">${pct(wp)}</div>
+          </td>`;
+        }
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+
+// ============ Rivalries ============
+function buildRivalries() {
+  const seen = new Set();
+  const rivs = [];
+  for (const a of DATA.all_owners) {
+    for (const b of DATA.all_owners) {
+      if (a === b) continue;
+      const k = [a, b].sort().join('|');
+      if (seen.has(k)) continue;
+      seen.add(k);
+      const ab = DATA.h2h[a] && DATA.h2h[a][b];
+      if (!ab || !ab.games) continue;
+      const total = ab.games;
+      const closeness = Math.abs(ab.wins - ab.losses);
+      const rivalry_score = total - closeness * 1.5;
+      rivs.push({ a, b, games: total, a_wins: ab.wins, b_wins: ab.losses, ties: ab.ties || 0, score: rivalry_score, avg_total: ((ab.pf + ab.pa) / total).toFixed(1) });
+    }
+  }
+  rivs.sort((x, y) => y.score - x.score);
+  const top = rivs.slice(0, 12);
+  document.getElementById('rivalriesList').innerHTML = top.map((r, i) => `
+    <div class="record-row">
+      <div class="num">${i+1}</div>
+      <div class="desc"><strong>${r.a}</strong> vs <strong>${r.b}</strong><br><span class="meta">${r.a_wins}-${r.b_wins}${r.ties ? '-'+r.ties : ''} · ${r.games} games played · ${r.avg_total} avg combined points</span></div>
+      <div class="val">${r.games} GP</div>
+    </div>`).join('');
+}
+
+// ============ Luck chart ============
+let luckType = 'bar';
+function buildLuck() {
+  const ctx = document.getElementById('chartLuck').getContext('2d');
+  const sorted = [...DATA.luck].sort((a,b) => b.luck_score - a.luck_score);
+  const { inkColor, inkSecondary, gridColor, tooltipBg } = commonChartOpts();
+
+  charts.luck = new Chart(ctx, {
+    type: luckType === 'bar' ? 'bar' : 'line',
+    data: {
+      labels: sorted.map(l => l.owner),
+      datasets: [{
+        data: sorted.map(l => l.luck_score),
+        backgroundColor: luckType === 'bar' ? sorted.map(l => l.luck_score > 0 ? 'rgba(110,212,122,0.85)' : 'rgba(255,78,100,0.85)') : 'rgba(110,212,122,0.15)',
+        borderColor: luckType === 'bar' ? sorted.map(l => l.luck_score > 0 ? '#6ed47a' : '#ff4e64') : '#6ed47a',
+        borderRadius: 2, barThickness: 18,
+        borderWidth: luckType === 'line' ? 2.5 : 0,
+        tension: 0.3,
+        pointRadius: luckType === 'line' ? 6 : 0,
+        pointBackgroundColor: sorted.map(l => l.luck_score > 0 ? '#6ed47a' : '#ff4e64'),
+        fill: luckType === 'line',
+      }]
+    },
+    options: {
+      indexAxis: luckType === 'bar' ? 'y' : 'x',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: tooltipBg, titleColor: inkColor, bodyColor: inkSecondary, borderColor: gridColor, borderWidth: 1, padding: 10,
+          callbacks: { label: (c) => {
+            const item = sorted[c.dataIndex];
+            return [`${item.actual_wins} actual W`, `${item.expected_wins} expected W`, `${(luckType === 'bar' ? c.parsed.x : c.parsed.y) > 0 ? '+' : ''}${(luckType === 'bar' ? c.parsed.x : c.parsed.y).toFixed(1)} luck`];
+          }}}
+      },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: inkSecondary, maxRotation: luckType === 'line' ? 45 : 0, minRotation: luckType === 'line' ? 45 : 0 }, border: { display: false },
+             title: luckType === 'bar' ? { display: true, text: '← UNLUCKY · LUCKY →', color: inkSecondary, font: { family: 'JetBrains Mono', size: 10 } } : undefined },
+        y: { grid: { color: gridColor }, ticks: { color: inkColor, font: { weight: 600 } }, border: { display: false } }
+      }
+    }
+  });
+}
+
+// ============ Draft chart ============
+let draftType = 'bar';
+function buildDraft() {
+  const ctx = document.getElementById('chartDraft').getContext('2d');
+  const sorted = [...DATA.draft_rankings].sort((a,b) => b.avg_per_season - a.avg_per_season);
+  const { inkColor, inkSecondary, gridColor, tooltipBg } = commonChartOpts();
+
+  charts.draft = new Chart(ctx, {
+    type: draftType === 'bar' ? 'bar' : 'line',
+    data: {
+      labels: sorted.map(d => d.owner),
+      datasets: [{
+        data: sorted.map(d => d.avg_per_season),
+        backgroundColor: draftType === 'bar' ? sorted.map(d => ownerColor[d.owner]) : 'rgba(245,213,71,0.15)',
+        borderColor: draftType === 'bar' ? sorted.map(d => ownerColor[d.owner]) : '#f5d547',
+        borderRadius: 2, barThickness: 18,
+        borderWidth: draftType === 'line' ? 2.5 : 0,
+        tension: 0.3,
+        pointRadius: draftType === 'line' ? 6 : 0,
+        pointBackgroundColor: sorted.map(d => ownerColor[d.owner]),
+        fill: draftType === 'line',
+      }]
+    },
+    options: {
+      indexAxis: draftType === 'bar' ? 'y' : 'x',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: tooltipBg, titleColor: inkColor, bodyColor: inkSecondary, borderColor: gridColor, borderWidth: 1, padding: 10,
+          callbacks: { label: (c) => `${(draftType === 'bar' ? c.parsed.x : c.parsed.y).toFixed(1)} pts/season` }}
+      },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: inkSecondary, maxRotation: draftType === 'line' ? 45 : 0, minRotation: draftType === 'line' ? 45 : 0 }, border: { display: false } },
+        y: { grid: { color: gridColor }, ticks: { color: inkColor, font: { weight: 600 } }, border: { display: false } }
+      }
+    }
+  });
+}
+
+// ============ Quadrant ============
+function buildQuadrant() {
+  const ctx = document.getElementById('chartQuadrant').getContext('2d');
+  const draftMap = {};
+  DATA.draft_rankings.forEach(d => draftMap[d.owner] = d.avg_per_season);
+  const luckMap = {};
+  DATA.luck.forEach(l => luckMap[l.owner] = l.luck_score);
+  const points = DATA.all_owners.map(o => ({ x: draftMap[o] || 0, y: luckMap[o] || 0, name: o }));
+  const { inkColor, inkSecondary, gridColor, tooltipBg } = commonChartOpts();
+
+  charts.quadrant = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        data: points,
+        backgroundColor: points.map(p => ownerColor[p.name]),
+        borderColor: points.map(p => ownerColor[p.name]),
+        pointRadius: 9, pointHoverRadius: 14, borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 500 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: tooltipBg, titleColor: inkColor, bodyColor: inkSecondary,
+          borderColor: gridColor, borderWidth: 1, padding: 10,
+          callbacks: {
+            title: (items) => items[0].raw.name,
+            label: (ctx) => [`Draft hit rate: ${ctx.raw.x.toFixed(0)} pts/season`,
+                              `Luck score: ${ctx.raw.y > 0 ? '+' : ''}${ctx.raw.y.toFixed(1)}`]
+          }
+        }
+      },
+      scales: {
+        x: { title: { display: true, text: '← BAD DRAFTER · GOOD DRAFTER →', color: inkSecondary, font: { family: 'JetBrains Mono', size: 10 } },
+          grid: { color: gridColor }, ticks: { color: inkSecondary }, border: { display: false } },
+        y: { title: { display: true, text: '← UNLUCKY · LUCKY →', color: inkSecondary, font: { family: 'JetBrains Mono', size: 10 } },
+          grid: { color: gridColor }, ticks: { color: inkSecondary }, border: { display: false } }
+      }
+    }
+  });
+
+  // Plugin for labels next to points
+  const labelPlugin = {
+    id: 'quadrantLabels_' + Date.now(),
+    afterDatasetsDraw(chart) {
+      if (chart.canvas.id !== 'chartQuadrant') return;
+      const { ctx } = chart;
+      const ds = chart.data.datasets[0];
+      const meta = chart.getDatasetMeta(0);
+      ctx.save();
+      ctx.font = '600 11px Inter Tight, sans-serif';
+      ctx.fillStyle = getCSSVar('--canvas-text');
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      meta.data.forEach((point, i) => {
+        const name = ds.data[i].name;
+        ctx.fillText(' ' + name, point.x + 12, point.y);
+      });
+      ctx.restore();
+    }
+  };
+  Chart.register(labelPlugin);
+  charts.quadrant.update();
+}
+
+// ============ Wire up chart-type toggles ============
+document.querySelectorAll('.chart-toggle').forEach(group => {
+  group.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = group.dataset.target;
+      const type = btn.dataset.type;
+      if (target === 'ppg') { ppgType = type; if (charts.ppg) charts.ppg.destroy(); buildPPG(); }
+      if (target === 'winpct') { winpctType = type; if (charts.winpct) charts.winpct.destroy(); buildWinPctRanked(); }
+      if (target === 'luck') { luckType = type; if (charts.luck) charts.luck.destroy(); buildLuck(); }
+      if (target === 'draft') { draftType = type; if (charts.draft) charts.draft.destroy(); buildDraft(); }
+    });
+  });
+});
+
+// ============ Build everything ============
+function rebuildAllCharts() {
+  buildPPG();
+  buildWinPctRanked();
+  buildLuck();
+  buildDraft();
+  buildQuadrant();
+}
+
+// Initial build
+buildCareer();
+buildOwnerCards();
+buildStandingsHeatmap();
+buildWinPctHeatmap();
+renderRecordsLists();
+buildH2H();
+buildRivalries();
+rebuildAllCharts();
+</script>
+</body>
+</html>
