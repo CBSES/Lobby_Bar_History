@@ -699,7 +699,7 @@
       Let me set the scene. It's 2010. Obama is president, the iPad just came out, and ten guys decided to start a fantasy football league. <strong>That same ten guys are still here in 2025.</strong> No turnover. No replacement owners. No "my friend's brother needs a team." Sixteen seasons of the same trash talk, the same draft-night chaos, the same suspicious "my phone died" excuses on Sunday morning lineup deadlines.
     </p>
     <p>
-      And what do we have to show for it? <strong>Nine different champions.</strong> Sixteen rings spread across nine guys. Only one owner has never tasted glory — and you already know who that is. Neil finally got his first ring this year after sixteen years of begging. Andrew won three of the first four titles and then promptly disappeared for twelve years like the post-2010 Saints. Eric Jalbert has the best regular-season win percentage in league history and exactly <strong class="gold">one</strong> championship to show for it. He's been runner-up <strong class="hot">FOUR</strong> times. He's the Falcons of the Lobby Bar — leads the league all season then can't seal the deal in February.
+      And what do we have to show for it? <strong>Nine different champions.</strong> Sixteen rings spread across nine guys. Only one owner has never tasted glory — and you already know who that is. Neil finally got his first ring this year after sixteen years of begging. Andrew won three of the first four titles and then promptly disappeared for twelve years like the post-2010 Saints. Eric Jalbert has the best regular-season win percentage in league history and exactly <strong class="gold">one</strong> championship to show for it. He's been runner-up <strong class="hot">FOUR</strong> times. He's the Buffalo Bills of the Lobby Bar — leads the league all season then can't seal the deal in February.
     </p>
     <p>
       Greg wins championships when nobody expects it (2015, 2024 — the year he finished 8-5 with a -19 PF/G differential against him), because Greg basically <strong class="cool">re-drafts his entire team off the waiver wire by week 6</strong> (he gets 41% of his points from FA pickups, the highest in the league). Andrew leaves nineteen points on his bench every single week and somehow has three rings. Robert has named his team <span class="gold">"I hate fantasy Football"</span> for <strong>EIGHT CONSECUTIVE SEASONS</strong> (2018-2025). He won the chip in 2021 with that team name. Apparently the strategy works. The math doesn't math.
@@ -776,7 +776,7 @@
         <span class="pill">4× RUNNER-UP</span>
       </div>
       <div class="body">
-        Owns the <span class="green">best regular-season win % in league history (.595)</span>. Won the most regular-season games. Has exactly <span class="hot">ONE championship</span> (2018). Has been runner-up <span class="hot">FOUR TIMES</span> (2015, 2019, 2021, 2023). He's the Atlanta Falcons of fantasy football — leads the league all year, can't close in February. Eric's career resume reads: <em>tons of regular season success, a closet full of silver medals.</em>
+        Owns the <span class="green">best regular-season win % in league history (.595)</span>. Won the most regular-season games. Has exactly <span class="hot">ONE championship</span> (2018). Has been runner-up <span class="hot">FOUR TIMES</span> (2015, 2019, 2021, 2023). He's the Buffalo Bills of fantasy football — leads the league all year, can't close in February. Eric's career resume reads: <em>tons of regular season success, a closet full of silver medals.</em>
       </div>
       <div class="stat-line"><span class="l">Reg Season Win %</span><span class="v">59.6% (1st)</span></div>
       <div class="stat-line"><span class="l">Title Game Record</span><span class="v">1-4 — yikes</span></div>
@@ -1410,6 +1410,41 @@
 
   <div class="panel" style="margin-top: 22px;">
     <div class="panel-head">
+      <h2>Lucky Wins Ratio</h2>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span class="lock-badge">Reg + Real Playoff</span>
+        <div class="chart-toggle" data-target="lucky">
+          <button class="active" data-type="bar">% LUCKY</button>
+          <button data-type="stacked">STACKED</button>
+        </div>
+      </div>
+    </div>
+    <p class="panel-sub">
+      A "lucky win" = a week you won despite NOT cracking the top 5 in scoring league-wide. It means you scored in the bottom half (or lower) yet still beat your matchup. Higher % = more wins came from low-scoring weeks where you got bailed out by your opponent. Lower % = your wins were earned by being one of the top scorers.
+      <strong>TJ Doody leads at 33% lucky wins</strong> — fitting, since he scores low. <strong>Andrew Howard is the lowest at 14.5%</strong> — when he wins, he earns it by outscoring most of the field.
+    </p>
+    <div class="chart-wrap"><canvas id="chartLucky"></canvas></div>
+  </div>
+
+  <div class="panel" style="margin-top: 22px;">
+    <div class="panel-head">
+      <h2>Lucky Wins · Year Over Year</h2>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span class="lock-badge">2019–2025 · Per-Week Data</span>
+        <div class="chart-toggle" data-target="luckyyoy">
+          <button class="active" data-type="count">COUNT</button>
+          <button data-type="rate">% RATE</button>
+        </div>
+      </div>
+    </div>
+    <p class="panel-sub">
+      Lucky wins by season per owner. ESPN's API only retains weekly box-score data back to 2019, so this view covers the last 7 seasons. <strong>COUNT</strong> shows raw lucky-win totals; <strong>% RATE</strong> shows what share of each year's wins were lucky. Darker = luckier. Hover any cell for the breakdown. <strong>Chad's 2024</strong> jumps right out — 5 lucky wins, 71% of his wins that year.
+    </p>
+    <div class="heatmap-wrap"><table class="heatmap" id="luckyYoYHeatmap"></table></div>
+  </div>
+
+  <div class="panel" style="margin-top: 22px;">
+    <div class="panel-head">
       <h2>Drafted Players vs Waiver/FA Pickups</h2>
       <div style="display: flex; gap: 12px; align-items: center;">
         <span class="lock-badge">Reg + Real Playoff</span>
@@ -1454,10 +1489,43 @@ const POS_PALETTE = ['#f5d547','#ff4e64','#5fa8ff','#6ed47a','#ff8c5a','#b1b6c2'
 const ownerColor = {};
 DATA.all_owners.forEach((o,i) => ownerColor[o] = POS_PALETTE[i % POS_PALETTE.length]);
 
+// Lucky wins ratio: wins where the owner did NOT score in the top 5 that week
+// (regular + playoff combined). Computed from raw matchup data.
+const LUCKY_WINS = [
+  {"owner":"TJ Doody","wins":33,"lucky_wins":11,"lucky_pct":33.3,"top5_wins":22},
+  {"owner":"Matt Howard","wins":40,"lucky_wins":12,"lucky_pct":30.0,"top5_wins":28},
+  {"owner":"Chad Brodeur","wins":49,"lucky_wins":14,"lucky_pct":28.6,"top5_wins":35},
+  {"owner":"Cornelius Hourihan","wins":42,"lucky_wins":11,"lucky_pct":26.2,"top5_wins":31},
+  {"owner":"Greg Jalbert","wins":50,"lucky_wins":12,"lucky_pct":24.0,"top5_wins":38},
+  {"owner":"Thomas Pluciennik","wins":59,"lucky_wins":11,"lucky_pct":18.6,"top5_wins":48},
+  {"owner":"Sean Henry","wins":39,"lucky_wins":7,"lucky_pct":17.9,"top5_wins":32},
+  {"owner":"Eric Jalbert","wins":63,"lucky_wins":11,"lucky_pct":17.5,"top5_wins":52},
+  {"owner":"Robert Pluciennik","wins":61,"lucky_wins":9,"lucky_pct":14.8,"top5_wins":52},
+  {"owner":"Andrew Howard","wins":55,"lucky_wins":8,"lucky_pct":14.5,"top5_wins":47}
+];
+
+// Per-year lucky wins (only 2019+ has box-score data from ESPN API)
+// Each value: [lucky_wins, total_wins, lucky_pct]
+const LUCKY_YOY = {
+  years: [2019, 2020, 2021, 2022, 2023, 2024, 2025],
+  by_owner: {
+    "Andrew Howard":     [[1,10,10.0],[1,10,10.0],[0,7,0.0],[2,4,50.0],[3,7,42.9],[0,11,0.0],[1,6,16.7]],
+    "Chad Brodeur":      [[1,11,9.1],[2,4,50.0],[2,6,33.3],[1,4,25.0],[2,7,28.6],[5,7,71.4],[1,10,10.0]],
+    "Thomas Pluciennik": [[2,8,25.0],[3,8,37.5],[1,8,12.5],[1,4,25.0],[1,13,7.7],[1,8,12.5],[2,10,20.0]],
+    "Greg Jalbert":      [[2,5,40.0],[3,9,33.3],[1,7,14.3],[2,7,28.6],[2,6,33.3],[2,12,16.7],[0,4,0.0]],
+    "Matt Howard":       [[2,5,40.0],[1,3,33.3],[0,6,0.0],[3,12,25.0],[3,5,60.0],[1,4,25.0],[2,5,40.0]],
+    "Eric Jalbert":      [[3,11,27.3],[0,7,0.0],[2,13,15.4],[2,8,25.0],[1,12,8.3],[1,5,20.0],[2,7,28.6]],
+    "Robert Pluciennik": [[1,10,10.0],[2,6,33.3],[2,12,16.7],[1,12,8.3],[1,7,14.3],[2,9,22.2],[0,5,0.0]],
+    "Sean Henry":        [[1,4,25.0],[1,11,9.1],[1,2,50.0],[0,7,0.0],[2,5,40.0],[1,6,16.7],[1,4,25.0]],
+    "Cornelius Hourihan":[[3,6,50.0],[1,6,16.7],[1,3,33.3],[3,8,37.5],[0,4,0.0],[2,4,50.0],[1,11,9.1]],
+    "TJ Doody":          [[1,1,100.0],[0,2,0.0],[3,7,42.9],[1,5,20.0],[2,5,40.0],[2,5,40.0],[2,8,25.0]]
+  }
+};
+
 // ===== Global state =====
 let currentSplit = 'regular';
 let currentTheme = 'dark';
-const chartTypes = { ppg: 'bar', winpct: 'bar', luck: 'bar', coaching: 'bar', draftfa: 'stacked' };
+const chartTypes = { ppg: 'bar', winpct: 'bar', luck: 'bar', coaching: 'bar', draftfa: 'stacked', lucky: 'bar', luckyyoy: 'count' };
 
 const SPLIT_LABELS = {
   regular: 'REGULAR SEASON',
@@ -2139,6 +2207,135 @@ function buildDraftFA() {
   });
 }
 
+// ===== Lucky Wins Ratio =====
+function buildLucky() {
+  const ctx = document.getElementById('chartLucky').getContext('2d');
+  const type = chartTypes.lucky; // 'bar' (% lucky) or 'stacked' (lucky vs top5 wins)
+  const { inkColor, inkSecondary, gridColor, tooltipBg } = commonOpts();
+
+  // Sort by lucky_pct descending — luckiest at top
+  const data = LUCKY_WINS.slice().sort((a,b) => b.lucky_pct - a.lucky_pct);
+  let datasets;
+
+  if (type === 'stacked') {
+    datasets = [
+      {
+        label: 'Top-5 Wins (earned)',
+        data: data.map(d => d.top5_wins),
+        backgroundColor: '#6ed47a',
+        borderColor: '#6ed47a',
+        stack: 'wins', borderRadius: 0, barThickness: 22,
+      },
+      {
+        label: 'Lucky Wins (not top-5)',
+        data: data.map(d => d.lucky_wins),
+        backgroundColor: '#f5d547',
+        borderColor: '#f5d547',
+        stack: 'wins', borderRadius: 2, barThickness: 22,
+      }
+    ];
+  } else {
+    // % bar — color by owner palette but warm-shift highest
+    const colors = data.map(d => {
+      // luckiest = hot; least lucky = green
+      if (d.lucky_pct >= 28) return '#ff4e64';
+      if (d.lucky_pct >= 22) return '#ff8c5a';
+      if (d.lucky_pct >= 18) return '#f5d547';
+      return '#6ed47a';
+    });
+    datasets = [{
+      data: data.map(d => d.lucky_pct),
+      backgroundColor: colors, borderColor: colors,
+      borderRadius: 2, barThickness: 18,
+    }];
+  }
+
+  charts.lucky = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: data.map(d => d.owner), datasets },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: type === 'stacked' ? {
+          display: true, position: 'top', align: 'end',
+          labels: { color: inkSecondary, font: { family: 'JetBrains Mono', size: 10 }, usePointStyle: true, padding: 12 }
+        } : { display: false },
+        tooltip: {
+          backgroundColor: tooltipBg, titleColor: inkColor, bodyColor: inkSecondary,
+          borderColor: gridColor, borderWidth: 1, padding: 10,
+          callbacks: {
+            label: (c) => {
+              const d = data[c.dataIndex];
+              if (type === 'stacked') {
+                const isLucky = c.dataset.label.startsWith('Lucky');
+                return isLucky
+                  ? [`${d.lucky_wins} lucky wins`, `Won despite scoring outside top 5`]
+                  : [`${d.top5_wins} top-5 wins`, `Earned by being a top scorer`];
+              }
+              return [`${d.lucky_pct.toFixed(1)}% lucky win ratio`,
+                      `${d.lucky_wins} of ${d.wins} wins came on low-scoring weeks`];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: type === 'stacked',
+          grid: { color: gridColor },
+          ticks: { color: inkSecondary, callback: (v) => type === 'bar' ? v + '%' : v },
+          border: { display: false },
+          title: type === 'bar' ? { display: true, text: '% OF WINS THAT WERE "LUCKY"', color: inkSecondary, font: { family: 'JetBrains Mono', size: 10 } } :
+                                  { display: true, text: 'TOTAL WINS', color: inkSecondary, font: { family: 'JetBrains Mono', size: 10 } }
+        },
+        y: { stacked: type === 'stacked', grid: { display: false }, ticks: { color: inkColor, font: { weight: 600 } }, border: { display: false } }
+      }
+    }
+  });
+}
+
+// ===== Lucky Wins Year-over-Year Heatmap =====
+function luckyColor(value, mode) {
+  // mode='count' -> 0..5+ ; mode='rate' -> 0..100
+  if (value == null) return 'transparent';
+  const t = mode === 'count' ? Math.min(value / 5, 1) : Math.min(value / 70, 1);
+  if (t === 0) return '#1a3a4a';
+  if (t < 0.15) return '#1a4060';
+  if (t < 0.30) return '#3a5a6a';
+  if (t < 0.45) return '#7a7a5a';
+  if (t < 0.60) return '#b59340';
+  if (t < 0.75) return '#d4a838';
+  if (t < 0.90) return '#e88a3a';
+  return '#d6403a';
+}
+
+function buildLuckyYoY() {
+  const tbl = document.getElementById('luckyYoYHeatmap');
+  const mode = chartTypes.luckyyoy; // 'count' or 'rate'
+  const years = LUCKY_YOY.years;
+  const owners = Object.keys(LUCKY_YOY.by_owner);
+
+  let html = '<thead><tr><th></th>';
+  years.forEach(y => html += `<th>${y}</th>`);
+  html += '</tr></thead><tbody>';
+
+  owners.forEach(owner => {
+    html += `<tr><th>${renderOwner(owner)}</th>`;
+    const yearData = LUCKY_YOY.by_owner[owner];
+    yearData.forEach((d, i) => {
+      const [lucky, wins, pct] = d;
+      const value = mode === 'count' ? lucky : pct;
+      const display = mode === 'count' ? lucky : (wins ? pct.toFixed(0) + '%' : '—');
+      const bg = luckyColor(value, mode);
+      const tip = `${owner} · ${years[i]} · ${lucky} lucky / ${wins} wins (${pct.toFixed(1)}%)`;
+      html += `<td style="background:${bg};color:#fff" title="${tip}">${display}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  tbl.innerHTML = html + '</tbody>';
+}
+
 // ===== Quadrant — coaching efficiency × luck =====
 function buildQuadrant() {
   const ctx = document.getElementById('chartQuadrant').getContext('2d');
@@ -2213,7 +2410,7 @@ document.querySelectorAll('.chart-toggle').forEach(group => {
       chartTypes[target] = btn.dataset.type;
       if (charts[target]) charts[target].destroy();
       const builders = { ppg: buildPPG, winpct: buildWinPctRanked, luck: buildLuck,
-                         coaching: buildCoaching, draftfa: buildDraftFA };
+                         coaching: buildCoaching, draftfa: buildDraftFA, lucky: buildLucky, luckyyoy: buildLuckyYoY };
       builders[target]();
     });
   });
@@ -2227,6 +2424,8 @@ function rebuildAllCharts() {
   buildLuck();
   buildCoaching();
   buildDraftFA();
+  buildLucky();
+  buildLuckyYoY();
   buildQuadrant();
 }
 
